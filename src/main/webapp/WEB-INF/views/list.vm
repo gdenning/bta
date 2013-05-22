@@ -1,0 +1,6 @@
+<h2>List of Feeds</h2>
+<ul>
+    #foreach($feed in $feeds)
+        <li><a href="/feed/${feed.id}">${feed.title}</a></li>
+    #end
+</ul>
