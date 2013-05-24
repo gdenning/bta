@@ -1,8 +1,5 @@
 package com.zerodes.bta.domain;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,9 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -22,9 +19,11 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "TTransaction")
-public class Transaction implements Serializable {
-	private static final long serialVersionUID = 1L;
-
+@NamedQueries({
+	@NamedQuery(name = "findTransactionsByUserAndMonth", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3"),
+	@NamedQuery(name = "findTransactionsByUserAndYear", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2")
+})
+public class Transaction  {
 	@Column(name = "TransactionId", nullable = false)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +34,14 @@ public class Transaction implements Serializable {
 	@ForeignKey(name = "FK_Transaction_User")
 	private User user;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "TransactionDate", nullable = false)
-	private Date transactionDate;
+	@Column(name = "TransactionYear", precision = 4, nullable = false)
+	private int transactionYear;
+
+	@Column(name = "TransactionMonth", precision = 2, nullable = false)
+	private int transactionMonth;
+
+	@Column(name = "TransactionDay", precision = 2, nullable = false)
+	private int transactionDay;
 
 	@Column(name = "Amount", scale = 2, precision = 10, nullable = false)
 	private double amount;
@@ -70,12 +74,28 @@ public class Transaction implements Serializable {
 		this.user = user;
 	}
 
-	public Date getCreateDate() {
-		return transactionDate;
+	public int getTransactionYear() {
+		return transactionYear;
 	}
 
-	public void setCreateDate(Date createDate) {
-		this.transactionDate = createDate;
+	public void setTransactionYear(int transactionYear) {
+		this.transactionYear = transactionYear;
+	}
+
+	public int getTransactionMonth() {
+		return transactionMonth;
+	}
+
+	public void setTransactionMonth(int transactionMonth) {
+		this.transactionMonth = transactionMonth;
+	}
+
+	public int getTransactionDay() {
+		return transactionDay;
+	}
+
+	public void setTransactionDay(int transactionDay) {
+		this.transactionDay = transactionDay;
 	}
 
 	public double getAmount() {
@@ -122,7 +142,9 @@ public class Transaction implements Serializable {
 		return new ToStringBuilder(this)
 			.append("transactionId", transactionId)
 			.append("user", user)
-			.append("transactionDate", transactionDate)
+			.append("transactionYear", transactionYear)
+			.append("transactionMonth", transactionMonth)
+			.append("transactionDay", transactionDay)
 			.append("amount", amount)
 			.append("description", description)
 			.append("vendor", vendor)
@@ -135,7 +157,9 @@ public class Transaction implements Serializable {
 	public int hashCode() {
 		return new HashCodeBuilder()
 			.append(user)
-			.append(transactionDate)
+			.append(transactionYear)
+			.append(transactionMonth)
+			.append(transactionDay)
 			.append(amount)
 			.append(description)
 			.append(vendor)
@@ -158,7 +182,9 @@ public class Transaction implements Serializable {
 		Transaction other = (Transaction) obj;
 		return new EqualsBuilder()
 			.append(user, other.user)
-			.append(transactionDate, other.transactionDate)
+			.append(transactionYear, other.transactionYear)
+			.append(transactionMonth, other.transactionMonth)
+			.append(transactionDay, other.transactionDay)
 			.append(amount, other.amount)
 			.append(description, other.description)
 			.append(vendor, other.vendor)

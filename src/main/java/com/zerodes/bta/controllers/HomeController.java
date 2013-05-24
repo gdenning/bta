@@ -1,5 +1,6 @@
 package com.zerodes.bta.controllers;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Scope;
@@ -15,7 +16,9 @@ public class HomeController extends AbstractController {
 	 * Display the summary page.
 	 */
 	@RequestMapping(value="/summary")
-	public ModelAndView handleSummaryRequest(final HttpServletResponse response) {
+	public ModelAndView handleSummaryRequest(final HttpServletRequest request, final HttpServletResponse response) {
+		String periodA = request.getParameter("periodA");
+		String periodB = request.getParameter("periodB");
 		return new ModelAndView("summary", null);
 	}
 

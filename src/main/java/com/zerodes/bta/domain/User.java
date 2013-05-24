@@ -17,7 +17,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "findAllUsers", query = "select myUser from User myUser"),
-		@NamedQuery(name = "findUserByNameContaining", query = "select myUser from User myUser where myUser.name like ?1"),
 		@NamedQuery(name = "findUserByName", query = "select myUser from User myUser where myUser.name = ?1"),
 		@NamedQuery(name = "findUserByEmail", query = "select myUser from User myUser where myUser.email = ?1"),
 })

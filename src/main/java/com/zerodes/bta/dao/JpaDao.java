@@ -11,7 +11,7 @@ public interface JpaDao<T> {
 	
 	T find(Class<T> entityClass, Object primaryKey);
 	
-	Query createNamedQuery(String name, int firstResult, int maxResults, Object... params);
+	Query createNamedQuery(String name, Object... params);
 	
 	Object executeQueryByNameSingleResult(String name, Object...params);
 	

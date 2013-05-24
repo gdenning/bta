@@ -49,7 +49,7 @@ public class UserDAOImpl extends AbstractJpaDao<User> implements UserDAO {
 	 */
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
 	public User findUserByEmail(String email) throws DataAccessException {
-		Query query = createNamedQuery("findUserByEmail", 0, 1, email);
+		Query query = createNamedQuery("findUserByEmail", email);
 		Iterator<User> userIterator = query.getResultList().iterator();
 		if (!userIterator.hasNext()) {
 			return null;
@@ -60,56 +60,20 @@ public class UserDAOImpl extends AbstractJpaDao<User> implements UserDAO {
 	/**
 	 * JPQL Query - findUserByName
 	 */
+	@SuppressWarnings("unchecked")
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
 	public Set<User> findUserByName(String name) throws DataAccessException {
-
-		return findUserByName(name, -1, -1);
-	}
-
-	/**
-	 * JPQL Query - findUserByName
-	 */
-	@SuppressWarnings("unchecked")
-	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-	public Set<User> findUserByName(String name, int startResult, int maxRows) throws DataAccessException {
-		Query query = createNamedQuery("findUserByName", startResult, maxRows, name);
-		return new LinkedHashSet<User>(query.getResultList());
-	}
-
-	/**
-	 * JPQL Query - findUserByNameContaining
-	 */
-	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-	public Set<User> findUserByNameContaining(String name) throws DataAccessException {
-
-		return findUserByNameContaining(name, -1, -1);
-	}
-
-	/**
-	 * JPQL Query - findUserByNameContaining
-	 */
-	@SuppressWarnings("unchecked")
-	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-	public Set<User> findUserByNameContaining(String name, int startResult, int maxRows) throws DataAccessException {
-		Query query = createNamedQuery("findUserByNameContaining", startResult, maxRows, name);
+		Query query = createNamedQuery("findUserByName", name);
 		return new LinkedHashSet<User>(query.getResultList());
 	}
 
 	/**
 	 * JPQL Query - findAllUsers
 	 */
+	@SuppressWarnings("unchecked")
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
 	public Set<User> findAllUsers() throws DataAccessException {
-		return findAllUsers(-1, -1);
-	}
-
-	/**
-	 * JPQL Query - findAllUsers
-	 */
-	@SuppressWarnings("unchecked")
-	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-	public Set<User> findAllUsers(int startResult, int maxRows) throws DataAccessException {
-		Query query = createNamedQuery("findAllUsers", startResult, maxRows);
+		Query query = createNamedQuery("findAllUsers");
 		return new LinkedHashSet<User>(query.getResultList());
 	}
 }

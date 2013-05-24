@@ -12,16 +12,8 @@ public abstract class AbstractJpaDao<T> implements JpaDao<T> {
 		return getEntityManager().find(entityClass, primaryKey);
 	}
 	
-	public Query createNamedQuery(final String name, final int firstResult, 
-			final int maxResults, final Object... params) {
+	public Query createNamedQuery(final String name, final Object... params) {
 		final Query query = getEntityManager().createNamedQuery(name);
-		if (firstResult >= 0) {
-			query.setFirstResult(firstResult);
-		}
-		if (maxResults >= 0) {
-			query.setMaxResults(maxResults);
-		}
-		
 		int paramIndex = 0;
 		for (Object param : params) {
 			paramIndex++;

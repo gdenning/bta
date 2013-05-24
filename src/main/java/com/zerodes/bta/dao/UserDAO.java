@@ -14,13 +14,5 @@ public interface UserDAO extends JpaDao<User> {
 
 	Set<User> findUserByName(String name) throws DataAccessException;
 
-	Set<User> findUserByName(String name, int startResult, int maxRows) throws DataAccessException;
-
-	Set<User> findUserByNameContaining(String name_1) throws DataAccessException;
-
-	Set<User> findUserByNameContaining(String name_1, int startResult, int maxRows) throws DataAccessException;
-
 	Set<User> findAllUsers() throws DataAccessException;
-
-	Set<User> findAllUsers(int startResult, int maxRows) throws DataAccessException;
 }
