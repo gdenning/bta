@@ -1,11 +1,7 @@
 package com.zerodes.bta.domain;
 
-import java.io.Serializable;
-
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,61 +22,26 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 		@NamedQuery(name = "findUserByEmail", query = "select myUser from User myUser where myUser.email = ?1"),
 })
 @Table(name = "TUser")
-public class User implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	@Column(name = "UserID", nullable = false)
-	@Basic(fetch = FetchType.EAGER)
+public class User {
+	@Column(name = "UserId", nullable = false)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long userId;
 
 	@Column(name = "Email", nullable = false)
-	@Basic(fetch = FetchType.EAGER)
 	private String email;
 
 	@Column(name = "Password", nullable = false)
-	@Basic(fetch = FetchType.EAGER)
 	private String password;
 	
 	@Transient
 	private String unencryptedPassword;
 
 	@Column(name = "Name", length = 50, nullable = false)
-	@Basic(fetch = FetchType.EAGER)
 	private String name;
 
 	@Column(name = "Description", length = 1000, nullable = false)
-	@Basic(fetch = FetchType.EAGER)
 	private String description;
-
-//	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-//	@ForeignKey(name = "FK_UserDevice_User")
-//	private Set<UserDevice> devices;
-//
-//	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//	@ForeignKey(name = "FK_TriggerAlert_User")
-//	private Set<TriggerAlert> triggerAlerts;
-//
-//	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//	@ForeignKey(name = "FK_EventInvite_User")
-//	private Set<EventInvite> eventInvites;
-//
-//	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//	@ForeignKey(name = "FK_EventMember_User")
-//	private Set<EventMember> eventMembers;
-//
-//	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//	@ForeignKey(name = "FK_Trigger_User")
-//	private Set<Trigger> triggers;
-//
-//	@OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-//	@ForeignKey(name = "FK_Event_User")
-//	private Set<Event> events;
-//
-//	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//	@ForeignKey(name = "FK_Activity_User")
-//	private Set<Activity> activities;
 
 	public void setUserId(long userId) {
 		this.userId = userId;

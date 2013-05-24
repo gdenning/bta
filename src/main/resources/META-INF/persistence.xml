@@ -8,6 +8,8 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>com.zerodes.bta.domain.User</class>
 		<class>com.zerodes.bta.domain.Transaction</class>
+		<class>com.zerodes.bta.domain.Category</class>
+		<class>com.zerodes.bta.domain.VendorCategory</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 	</persistence-unit>
 	

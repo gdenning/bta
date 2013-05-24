@@ -1,13 +1,17 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Spring MVC and Velocity</title>
-    </head>
-    <body>
-        <h1>Spring MVC and Velocity</h1>
+  <head>
+    <title>Bank Transactions Analyzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    $screen_content
 
-        $screen_content
-
-        <hr />
-        Copyright &copy 2013 Geoff Denning
-    </body>
+    <hr />
+    Copyright &copy 2013 Geoff Denning
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+  </body>
 </html>
