@@ -39,9 +39,6 @@ public class User {
 	@Column(name = "Name", length = 50, nullable = false)
 	private String name;
 
-	@Column(name = "Description", length = 1000, nullable = false)
-	private String description;
-
 	public void setUserId(long userId) {
 		this.userId = userId;
 	}
@@ -82,14 +79,6 @@ public class User {
 		return this.name;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getDescription() {
-		return this.description;
-	}
-
 	/**
 	 * Returns a textual representation of a bean.
 	 */
@@ -98,7 +87,6 @@ public class User {
 			.append("userId", userId)
 			.append("email", email)
 			.append("name", name)
-			.append("description", description)
 			.toString();
 	}
 
@@ -107,7 +95,6 @@ public class User {
 		return new HashCodeBuilder()
 			.append(email)
 			.append(name)
-			.append(description)
 			.toHashCode();
 	}
 
@@ -123,8 +110,6 @@ public class User {
 		return new EqualsBuilder()
 			.append(email, other.email)
 			.append(name, other.name)
-			.append(description, other.description)
 			.isEquals();
 	}
-
 }

@@ -20,8 +20,8 @@ import org.hibernate.annotations.ForeignKey;
 @Entity
 @Table(name = "TTransaction")
 @NamedQueries({
-	@NamedQuery(name = "findTransactionsByUserAndMonth", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3"),
-	@NamedQuery(name = "findTransactionsByUserAndYear", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2")
+	@NamedQuery(name = "findTransactionsByUserAndMonth", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 order by transactionDay"),
+	@NamedQuery(name = "findTransactionsByUserAndYear", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 order by transactionMonth, transactionDay")
 })
 public class Transaction  {
 	@Column(name = "TransactionId", nullable = false)
@@ -55,7 +55,7 @@ public class Transaction  {
 	@Column(name = "ImportSource", length = 255, nullable = false)
 	private String importSource;
 	
-	@Column(name = "Ignore", nullable = false)
+	@Column(name = "IgnoreTransaction", nullable = false)
 	private boolean ignore;
 
 	public long getTransactionId() {
@@ -163,8 +163,6 @@ public class Transaction  {
 			.append(amount)
 			.append(description)
 			.append(vendor)
-			.append(importSource)
-			.append(ignore)
 			.toHashCode();
 	}
 
@@ -188,8 +186,6 @@ public class Transaction  {
 			.append(amount, other.amount)
 			.append(description, other.description)
 			.append(vendor, other.vendor)
-			.append(importSource, other.importSource)
-			.append(ignore, other.ignore)
 			.isEquals();
 	}
 }

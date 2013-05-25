@@ -4,3 +4,7 @@
   <li><a href="categories">Categories</a></li>
   <li><a href="vendors">Vendors</a></li>
 </ul>
+<form method="POST" action="transactionsUpload" enctype="multipart/form-data">
+	Please select a file to upload : <input type="file" name="file" />
+	<input type="submit" value="Upload" />
+</form>

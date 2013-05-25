@@ -4,3 +4,17 @@
   <li><a href="categories">Categories</a></li>
   <li><a href="vendors">Vendors</a></li>
 </ul>
+Period A:
+<select>
+  <option value="volvo">Volvo</option>
+  <option value="saab">Saab</option>
+  <option value="mercedes">Mercedes</option>
+  <option value="audi">Audi</option>
+</select>
+Period B:
+<select>
+  <option value="volvo">Volvo</option>
+  <option value="saab">Saab</option>
+  <option value="mercedes">Mercedes</option>
+  <option value="audi">Audi</option>
+</select>

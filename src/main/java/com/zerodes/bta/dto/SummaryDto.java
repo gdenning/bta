@@ -1,20 +1,20 @@
 package com.zerodes.bta.dto;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Map;
 
 public class SummaryDto {
-	private List<CategorySummaryDto> revenue;
+	private Map<String, BigDecimal> revenue;
 	private BigDecimal revenueTotal;
-	private List<CategorySummaryDto> expenses;
+	private Map<String, BigDecimal> expenses;
 	private BigDecimal expensesTotal;
 	private BigDecimal savingsTotal;
 	private BigDecimal savingsPercent;
 	
-	public List<CategorySummaryDto> getRevenue() {
+	public Map<String, BigDecimal> getRevenue() {
 		return revenue;
 	}
-	public void setRevenue(List<CategorySummaryDto> revenue) {
+	public void setRevenue(Map<String, BigDecimal> revenue) {
 		this.revenue = revenue;
 	}
 	public BigDecimal getRevenueTotal() {
@@ -23,10 +23,10 @@ public class SummaryDto {
 	public void setRevenueTotal(BigDecimal revenueTotal) {
 		this.revenueTotal = revenueTotal;
 	}
-	public List<CategorySummaryDto> getExpenses() {
+	public Map<String, BigDecimal> getExpenses() {
 		return expenses;
 	}
-	public void setExpenses(List<CategorySummaryDto> expenses) {
+	public void setExpenses(Map<String, BigDecimal> expenses) {
 		this.expenses = expenses;
 	}
 	public BigDecimal getExpensesTotal() {
