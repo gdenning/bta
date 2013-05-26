@@ -27,10 +27,10 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long userId;
 
-	@Column(name = "Email", nullable = false)
+	@Column(name = "Email", length = 255, nullable = false)
 	private String email;
 
-	@Column(name = "Password", nullable = false)
+	@Column(name = "Password", length = 255, nullable = false)
 	private String password;
 	
 	@Transient

@@ -7,10 +7,11 @@
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
   </head>
   <body>
-    $screen_content
-
-    <hr />
-    Copyright &copy 2013 Geoff Denning
+    <div class="container">
+      $screen_content
+      <hr />
+      Copyright &copy 2013 Geoff Denning
+    </div>
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
   </body>

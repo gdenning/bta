@@ -19,35 +19,39 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.annotations.ForeignKey;
 
 @Entity
-@Table(name = "TVendorCategory")
+@Table(name = "TCategoryAssignment")
 @NamedQueries({
-	@NamedQuery(name = "findCategoryForVendor", query = "select category from VendorCategory vc where vc.vendor = ?1")
+	@NamedQuery(name = "findByUser", query = "select ca from CategoryAssignment ca where ca.user = ?1"),
+	@NamedQuery(name = "findByVendorAndDescription", query = "select ca from CategoryAssignment ca where ca.user = ?1 and ca.vendor = ?2 and ca.description = ?3")
 })
-public class VendorCategory {
-	@Column(name = "VendorCategoryId", nullable = false)
+public class CategoryAssignment {
+	@Column(name = "CategoryAssignmentId", nullable = false)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long vendorCategoryId;
+	private long categoryAssignmentId;
 
 	@ManyToOne
 	@JoinColumns( { @JoinColumn(name = "UserId", referencedColumnName = "UserId", nullable = false) })
 	@ForeignKey(name = "FK_Transaction_User")
 	private User user;
 
-	@Column(name = "Vendor")
-	private String vendor;
-
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumns( { @JoinColumn(name = "CategoryId", referencedColumnName = "CategoryId", nullable = false) })
 	@ForeignKey(name = "FK_VendorCategory_Category")
 	private Category category;
 
-	public long getVendorCategoryId() {
-		return vendorCategoryId;
+	@Column(name = "Vendor", length = 255)
+	private String vendor;
+
+	@Column(name = "Description", length = 255)
+	private String description;
+
+	public long getCategoryAssignmentId() {
+		return categoryAssignmentId;
 	}
 
-	public void setVendorCategoryId(long vendorCategoryId) {
-		this.vendorCategoryId = vendorCategoryId;
+	public void setCategoryAssignmentId(long categoryAssignmentId) {
+		this.categoryAssignmentId = categoryAssignmentId;
 	}
 
 	public User getUser() {
@@ -58,14 +62,6 @@ public class VendorCategory {
 		this.user = user;
 	}
 
-	public String getVendor() {
-		return vendor;
-	}
-
-	public void setVendor(String vendor) {
-		this.vendor = vendor;
-	}
-
 	public Category getCategory() {
 		return category;
 	}
@@ -74,19 +70,39 @@ public class VendorCategory {
 		this.category = category;
 	}
 
+	public String getVendor() {
+		return vendor;
+	}
+
+	public void setVendor(String vendor) {
+		this.vendor = vendor;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public String toString() {
 		return new ToStringBuilder(this)
-			.append("vendorCategoryId", vendorCategoryId)
-			.append("vendor", vendor)
+			.append("categoryAssignmentId", categoryAssignmentId)
+			.append("user", user)
 			.append("category", category)
+			.append("vendor", vendor)
+			.append("description", description)
 			.toString();
 	}
 
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder()
-			.append(vendor)
+			.append(user)
 			.append(category)
+			.append(vendor)
+			.append(description)
 			.toHashCode();
 	}
 
@@ -98,13 +114,15 @@ public class VendorCategory {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof VendorCategory)) {
+		if (!(obj instanceof CategoryAssignment)) {
 			return false;
 		}
-		VendorCategory other = (VendorCategory) obj;
+		CategoryAssignment other = (CategoryAssignment) obj;
 		return new EqualsBuilder()
-			.append(vendor, other.vendor)
+			.append(user, other.user)
 			.append(category, other.category)
+			.append(vendor, other.vendor)
+			.append(description, other.description)
 			.isEquals();
 	}
 }

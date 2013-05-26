@@ -21,7 +21,8 @@ import org.hibernate.annotations.ForeignKey;
 @Table(name = "TTransaction")
 @NamedQueries({
 	@NamedQuery(name = "findTransactionsByUserAndMonth", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 order by transactionDay"),
-	@NamedQuery(name = "findTransactionsByUserAndYear", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 order by transactionMonth, transactionDay")
+	@NamedQuery(name = "findTransactionsByUserAndYear", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 order by transactionMonth, transactionDay"),
+	@NamedQuery(name = "findUniqueDescriptionVendorCombinations", query = "select distinct txn.description, txn.vendor from Transaction txn where user = ?1")
 })
 public class Transaction  {
 	@Column(name = "TransactionId", nullable = false)

@@ -2,5 +2,30 @@
   <li><a href="summary">Summary</a></li>
   <li><a href="transactions">Transactions</a></li>
   <li class="active"><a href="categories">Categories</a></li>
-  <li><a href="vendors">Vendors</a></li>
+  <li><a href="categoryAssociations">Category Associations</a></li>
 </ul>
+<form method="POST" action="addCategory">
+	Name: <input type="text" name="categoryName" />
+	Type:
+		<select name="categoryType">
+			<option value="EXPENSE">Expense</option>
+			<option value="REVENUE">Revenue</option>
+		</select>
+	<input type="submit" value="Add" />
+</form>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Type</th>
+		</tr>
+	</thead>
+	<tbody>
+#foreach( $category in $categories )
+	<tr>
+		<td>$category.name</td>
+		<td>$category.type</td>
+	</tr>
+#end
+	</tbody>
+</table>

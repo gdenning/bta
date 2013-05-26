@@ -1,0 +1,38 @@
+<ul class="nav nav-tabs">
+  <li><a href="summary">Summary</a></li>
+  <li><a href="transactions">Transactions</a></li>
+  <li><a href="categories">Categories</a></li>
+  <li class="active"><a href="categoryAssociations">Category Associations</a></li>
+</ul>
+<form method="POST" action="saveCategoryAssociations">
+<table class="table">
+	<thead>
+		<tr>
+			<th>Description</th>
+			<th>Vendor</th>
+			<th>Category</th>
+		</tr>
+	</thead>
+	<tbody>
+#foreach( $categoryAssignment in $categoryAssignments )
+	<tr>
+		<td>$categoryAssignment.description</td>
+		<td>$categoryAssignment.vendor</td>
+		<td>
+			<select name="categoryFor${categoryAssignment.hashCode()}">
+				<option value=""></option>
+#foreach( $category in $categories )
+#if ( $category.equals($categoryAssignment.category) )
+				<option selected value="$category.name">$category.type - $category.name</option>
+#else
+				<option value="$category.name">$category.type - $category.name</option>
+#end
+#end
+			</select>
+		</td>
+	</tr>
+#end
+	</tbody>
+</table>
+<input type="submit" value="Save Changes" />
+</form>

@@ -2,12 +2,16 @@ package com.zerodes.bta.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -15,8 +19,14 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.annotations.ForeignKey;
 
+import com.zerodes.bta.enums.CategoryTypeEnum;
+
 @Entity
 @Table(name = "TCategory")
+@NamedQueries({
+	@NamedQuery(name = "findCategoriesByUser", query = "select cat from Category cat where user = ?1 order by type, name"),
+	@NamedQuery(name = "findCategoryByName", query = "select cat from Category cat where user = ?1 and name = ?2")
+})
 public class Category {
 	@Column(name = "CategoryId", nullable = false)
 	@Id
@@ -28,8 +38,12 @@ public class Category {
 	@ForeignKey(name = "FK_Transaction_User")
 	private User user;
 
-	@Column(name = "Name", nullable = false)
+	@Column(name = "Name", length = 255, nullable = false)
 	private String name;
+	
+	@Column(name = "Type", length = 20, nullable = false)
+	@Enumerated(EnumType.STRING)
+	private CategoryTypeEnum type;
 	
 	@Column(name = "CreditCardPayment", nullable = false)
 	private boolean creditCardPayment;
@@ -56,6 +70,14 @@ public class Category {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public CategoryTypeEnum getType() {
+		return type;
+	}
+
+	public void setType(CategoryTypeEnum type) {
+		this.type = type;
 	}
 
 	public boolean isCreditCardPayment() {

@@ -9,7 +9,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
@@ -19,8 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.zerodes.bta.dao.UserDAO;
 import com.zerodes.bta.domain.User;
 
-@Scope("singleton")
-@Repository("UserDAO")
+@Repository
 @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
 public class UserDAOImpl extends AbstractJpaDao<User> implements UserDAO {
 
@@ -32,9 +30,6 @@ public class UserDAOImpl extends AbstractJpaDao<User> implements UserDAO {
 		return entityManager;
 	}
 
-	/**
-	 * JPQL Query - findUserByPrimaryKey
-	 */
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
 	public User findUserByPrimaryKey(long userId) throws DataAccessException {
 		try {
