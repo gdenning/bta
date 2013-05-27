@@ -8,7 +8,7 @@ import com.zerodes.bta.enums.CategoryTypeEnum;
 public class CategoryDto {
 	private String name;
 	private CategoryTypeEnum type;
-	private boolean creditCardPayment;
+	private boolean ignoreForSummary;
 	
 	public String getName() {
 		return name;
@@ -22,11 +22,11 @@ public class CategoryDto {
 	public void setType(CategoryTypeEnum type) {
 		this.type = type;
 	}
-	public boolean isCreditCardPayment() {
-		return creditCardPayment;
+	public boolean isIgnoreForSummary() {
+		return ignoreForSummary;
 	}
-	public void setCreditCardPayment(boolean creditCardPayment) {
-		this.creditCardPayment = creditCardPayment;
+	public void setIgnoreForSummary(boolean ignoreForSummary) {
+		this.ignoreForSummary = ignoreForSummary;
 	}
 	
 	@Override

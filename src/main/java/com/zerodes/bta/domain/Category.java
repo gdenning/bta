@@ -45,8 +45,8 @@ public class Category {
 	@Enumerated(EnumType.STRING)
 	private CategoryTypeEnum type;
 	
-	@Column(name = "CreditCardPayment", nullable = false)
-	private boolean creditCardPayment;
+	@Column(name = "IgnoreForSummary", nullable = false)
+	private boolean ignoreForSummary;
 
 	public long getCategoryId() {
 		return categoryId;
@@ -80,12 +80,12 @@ public class Category {
 		this.type = type;
 	}
 
-	public boolean isCreditCardPayment() {
-		return creditCardPayment;
+	public boolean isIgnoreForSummary() {
+		return ignoreForSummary;
 	}
 
-	public void setCreditCardPayment(boolean creditCardPayment) {
-		this.creditCardPayment = creditCardPayment;
+	public void setIgnoreForSummary(boolean ignoreForSummary) {
+		this.ignoreForSummary = ignoreForSummary;
 	}
 
 	public String toString() {
@@ -93,7 +93,7 @@ public class Category {
 			.append("categoryId", categoryId)
 			.append("user", user)
 			.append("name", name)
-			.append("creditCardPayment", creditCardPayment)
+			.append("ignoreForSummary", ignoreForSummary)
 			.toString();
 	}
 
@@ -102,7 +102,7 @@ public class Category {
 		return new HashCodeBuilder()
 			.append(user)
 			.append(name)
-			.append(creditCardPayment)
+			.append(ignoreForSummary)
 			.toHashCode();
 	}
 
@@ -121,7 +121,7 @@ public class Category {
 		return new EqualsBuilder()
 			.append(user, other.user)
 			.append(name, other.name)
-			.append(creditCardPayment, other.creditCardPayment)
+			.append(ignoreForSummary, other.ignoreForSummary)
 			.isEquals();
 	}
 }

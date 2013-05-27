@@ -13,4 +13,5 @@ public interface TransactionDAO extends JpaDao<Transaction> {
 	List<Transaction> findTransactionsByUserAndYear(User user, int year);
 	List<Transaction> findTransactionsByUserAndMonth(User user, int year, int month);
 	List<Pair<String, String>> findUniqueDescriptionVendorCombinations(final User user);
+	Transaction findExistingTransaction(User user, int transactionYear, int transactionMonth, int transactionDay, double amount, String description, String vendor);
 }

@@ -22,9 +22,10 @@ import org.hibernate.annotations.ForeignKey;
 @NamedQueries({
 	@NamedQuery(name = "findTransactionsByUserAndMonth", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 order by transactionDay"),
 	@NamedQuery(name = "findTransactionsByUserAndYear", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 order by transactionMonth, transactionDay"),
-	@NamedQuery(name = "findUniqueDescriptionVendorCombinations", query = "select distinct txn.description, txn.vendor from Transaction txn where user = ?1")
+	@NamedQuery(name = "findUniqueDescriptionVendorCombinations", query = "select distinct txn.description, txn.vendor from Transaction txn where user = ?1"),
+	@NamedQuery(name = "findExistingTransaction", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 and transactionDay = ?4 and amount = ?5 and description = ?6 and vendor = ?7")
 })
-public class Transaction  {
+public class Transaction {
 	@Column(name = "TransactionId", nullable = false)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,9 +57,6 @@ public class Transaction  {
 	@Column(name = "ImportSource", length = 255, nullable = false)
 	private String importSource;
 	
-	@Column(name = "IgnoreTransaction", nullable = false)
-	private boolean ignore;
-
 	public long getTransactionId() {
 		return transactionId;
 	}
@@ -131,14 +129,6 @@ public class Transaction  {
 		this.importSource = importSource;
 	}
 
-	public boolean isIgnore() {
-		return ignore;
-	}
-
-	public void setIgnore(boolean ignore) {
-		this.ignore = ignore;
-	}
-
 	public String toString() {
 		return new ToStringBuilder(this)
 			.append("transactionId", transactionId)
@@ -150,7 +140,6 @@ public class Transaction  {
 			.append("description", description)
 			.append("vendor", vendor)
 			.append("importSource", importSource)
-			.append("ignore", ignore)
 			.toString();
 	}
 

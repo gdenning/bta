@@ -11,6 +11,7 @@
 			<option value="EXPENSE">Expense</option>
 			<option value="REVENUE">Revenue</option>
 		</select>
+	Ignore: <input type="checkbox" name="ignoreForSummary" value="true">
 	<input type="submit" value="Add" />
 </form>
 <table class="table">
@@ -18,6 +19,7 @@
 		<tr>
 			<th>Name</th>
 			<th>Type</th>
+			<th>Ignore in Summary</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -25,6 +27,7 @@
 	<tr>
 		<td>$category.name</td>
 		<td>$category.type</td>
+		<td>$category.ignoreForSummary</td>
 	</tr>
 #end
 	</tbody>

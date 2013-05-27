@@ -8,9 +8,8 @@ public class TransactionDto {
 	private double amount;
 	private String description;
 	private String vendor;
-	private String category;
+	private CategoryDto category;
 	private String importSource;
-	private boolean ignore;
 	
 	public int getTransactionYear() {
 		return transactionYear;
@@ -48,10 +47,10 @@ public class TransactionDto {
 	public void setVendor(String vendor) {
 		this.vendor = vendor;
 	}
-	public String getCategory() {
+	public CategoryDto getCategory() {
 		return category;
 	}
-	public void setCategory(String category) {
+	public void setCategory(CategoryDto category) {
 		this.category = category;
 	}
 	public String getImportSource() {
@@ -59,11 +58,5 @@ public class TransactionDto {
 	}
 	public void setImportSource(String importSource) {
 		this.importSource = importSource;
-	}
-	public boolean isIgnore() {
-		return ignore;
-	}
-	public void setIgnore(boolean ignore) {
-		this.ignore = ignore;
 	}
 }

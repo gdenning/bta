@@ -1,20 +1,20 @@
 package com.zerodes.bta.controllers;
 
 import java.io.IOException;
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.zerodes.bta.dto.CategoryAssignmentDto;
 import com.zerodes.bta.dto.CategoryDto;
 import com.zerodes.bta.dto.SummaryDto;
 import com.zerodes.bta.dto.TransactionDto;
@@ -54,14 +53,13 @@ public class DefaultController extends AbstractController {
 	 * Display the summary page.
 	 */
 	@RequestMapping(value = "/summary")
-	public ModelAndView handleSummaryRequest(final HttpServletRequest request,
-			final HttpServletResponse response) {
-		SummaryDto summaryADto = determineSummaryDtoForPeriod(request.getParameter("periodA"));
-		SummaryDto summaryBDto = determineSummaryDtoForPeriod(request.getParameter("periodB"));
-
-		Map<String, SummaryDto> model = new HashMap<String, SummaryDto>();
-		model.put("summaryA", summaryADto);
-		model.put("summaryB", summaryBDto);
+	public ModelAndView handleSummaryRequest(final HttpServletRequest request) {
+		Pair<Integer, Integer> yearMonthPair = convertPeriodStringToYearMonthPair(request.getParameter("period"));
+		SummaryDto summaryDto = determineSummaryDtoForPeriod(yearMonthPair);
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("summary", summaryDto);
+		model.put("periods", getPeriods());
+		model.put("selectedPeriod", convertYearMonthPairToPeriodString(yearMonthPair));
 		return new ModelAndView("summary", model);
 	}
 
@@ -70,21 +68,12 @@ public class DefaultController extends AbstractController {
 	 */
 	@RequestMapping(value = "/transactions")
 	public ModelAndView handleTransactionsRequest(final HttpServletRequest request) {
-		List<TransactionDto> transactions = null;
-		String period = request.getParameter("period");
-		if (period != null) {
-			ImmutablePair<Integer, Integer> monthYearPair = determineYearAndMonthFromPeriod(period);
-			if (monthYearPair.getRight() == null) {
-				transactions = transactionService.findTransactions(getAuthenticatedUser(), monthYearPair.getLeft());
-			} else {
-				transactions = transactionService.findTransactions(getAuthenticatedUser(), monthYearPair.getLeft(), monthYearPair.getRight());
-			}
-		} else {
-			transactions = transactionService.findTransactions(getAuthenticatedUser(), DateTime.now().getYear(), DateTime.now().getMonthOfYear());
-		}
+		Pair<Integer, Integer> yearMonthPair = convertPeriodStringToYearMonthPair(request.getParameter("period"));
+		List<TransactionDto> transactions = determineTransactionsForPeriod(yearMonthPair);
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("periods", getPeriods());
 		model.put("transactions", transactions);
+		model.put("selectedPeriod", convertYearMonthPairToPeriodString(yearMonthPair));
 		return new ModelAndView("transactions", model);
 	}
 
@@ -129,7 +118,9 @@ public class DefaultController extends AbstractController {
 	 */
 	@RequestMapping(value = "/addCategory", method = { RequestMethod.POST })
 	public String handleAddCategoryRequest(	final HttpServletRequest request) {
-		categoryService.add(getAuthenticatedUser(), request.getParameter("categoryName"), CategoryTypeEnum.valueOf(request.getParameter("categoryType")), false);
+		categoryService.add(getAuthenticatedUser(), request.getParameter("categoryName"),
+				CategoryTypeEnum.valueOf(request.getParameter("categoryType")),
+				Boolean.parseBoolean(request.getParameter("ignoreForSummary")));
 		return "redirect:categories";
 	}
 
@@ -153,20 +144,36 @@ public class DefaultController extends AbstractController {
 		return "redirect:categoryAssociations";
 	}
 
-	private SummaryDto determineSummaryDtoForPeriod(String period) {
+	private SummaryDto determineSummaryDtoForPeriod(Pair<Integer, Integer> yearMonthPair) {
 		SummaryDto summaryDto = null;
-		if (period != null) {
-			ImmutablePair<Integer, Integer> monthYearPairA = determineYearAndMonthFromPeriod(period);
-			if (monthYearPairA.getRight() == null) {
-				summaryDto = summaryService.getSummary(getAuthenticatedUser(), monthYearPairA.getLeft());
-			} else {
-				summaryDto = summaryService.getSummary(getAuthenticatedUser(), monthYearPairA.getLeft(), monthYearPairA.getRight());
-			}
+		if (yearMonthPair.getRight() == null) {
+			summaryDto = summaryService.getSummary(getAuthenticatedUser(), yearMonthPair.getLeft());
+		} else {
+			summaryDto = summaryService.getSummary(getAuthenticatedUser(), yearMonthPair.getLeft(), yearMonthPair.getRight());
 		}
 		return summaryDto;
 	}
 
-	private ImmutablePair<Integer, Integer> determineYearAndMonthFromPeriod(String period) {
+	private List<TransactionDto> determineTransactionsForPeriod(Pair<Integer, Integer> yearMonthPair) {
+		List<TransactionDto> transactions = null;
+		if (yearMonthPair.getRight() == null) {
+			transactions = transactionService.findTransactions(getAuthenticatedUser(), yearMonthPair.getLeft());
+		} else {
+			transactions = transactionService.findTransactions(getAuthenticatedUser(), yearMonthPair.getLeft(), yearMonthPair.getRight());
+		}
+		return transactions;
+	}
+	
+	private String convertYearMonthPairToPeriodString(Pair<Integer, Integer> yearMonthPair) {
+		DateTime dateTime = new DateTime(yearMonthPair.getLeft(), yearMonthPair.getRight(), 1, 0, 0, 0);
+		return dateTime.toString("yyyy-MMM");
+	}
+
+	private ImmutablePair<Integer, Integer> convertPeriodStringToYearMonthPair(String period) {
+		if (period == null) {
+			return new ImmutablePair<Integer, Integer>(DateTime.now().getYear(), DateTime.now().getMonthOfYear());
+		}
+		
 		// Determine year
 		Integer year = Integer.parseInt(period.substring(0, 4));
 
@@ -186,9 +193,9 @@ public class DefaultController extends AbstractController {
 	}
 	
 	private List<String> getPeriods() {
-		DateTime dateTime = DateTime.now().minusMonths(24);
+		DateTime dateTime = DateTime.now();
 		List<String> results = new ArrayList<String>();
-		for (; dateTime.isBefore(DateTime.now().plusDays(1)); dateTime = dateTime.plusMonths(1)) {
+		for (; dateTime.isAfter(DateTime.now().minusMonths(24)); dateTime = dateTime.minusMonths(1)) {
 			results.add(dateTime.toString("yyyy-MMM"));
 		}
 		return results;

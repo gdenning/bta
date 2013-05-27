@@ -4,17 +4,60 @@
   <li><a href="categories">Categories</a></li>
   <li><a href="categoryAssociations">Category Associations</a></li>
 </ul>
-Period A:
-<select>
-  <option value="volvo">Volvo</option>
-  <option value="saab">Saab</option>
-  <option value="mercedes">Mercedes</option>
-  <option value="audi">Audi</option>
-</select>
-Period B:
-<select>
-  <option value="volvo">Volvo</option>
-  <option value="saab">Saab</option>
-  <option value="mercedes">Mercedes</option>
-  <option value="audi">Audi</option>
-</select>
+<form method="GET" action="summary">
+	Period:
+		<select name="period" onchange="this.form.submit()">
+#foreach( $period in $periods )
+#if ( $period.equals($selectedPeriod) )
+			<option selected value="$period">$period</option>
+#else
+			<option value="$period">$period</option>
+#end
+#end
+		</select>
+</form>
+<table class="table">
+	<thead>
+		<tr>
+			<th></th>
+			<th>Category</th>
+			<th>Amount</th>
+		</tr>
+	</thead>
+	<tbody>
+#set( $first = true )
+#foreach( $revenue in $summary.getRevenue() )
+	<tr>
+#if ($first)
+		<th rowspan="$summary.getRevenue().size()">Revenue</td>
+#set( $first = false)
+#end
+		<td>$revenue.getLeft()</td>
+		<td>$summary.formatCurrency($revenue.getRight())</td>
+	</tr>
+#end
+	<tr>
+		<th colspan="2">Revenue Total</td>
+		<td><b>$summary.formatCurrency($summary.getRevenueTotal())</b></td>
+	</tr>
+#set( $first = true )
+#foreach( $expense in $summary.getExpenses() )
+	<tr>
+#if ($first)
+		<th rowspan="$summary.getExpenses().size()">Expenses</td>
+#set( $first = false)
+#end
+		<td>$expense.getLeft()</td>
+		<td>$summary.formatCurrency($expense.getRight())</td>
+	</tr>
+#end
+	<tr>
+		<th colspan="2">Expenses Total</td>
+		<td><b>$summary.formatCurrency($summary.getExpensesTotal())</b></td>
+	</tr>
+	<tr>
+		<th colspan="2">Savings (Losses)</td>
+		<td><b>$summary.formatCurrency($summary.getSavingsTotal())</b></td>
+	</tr>
+	</tbody>
+</table>

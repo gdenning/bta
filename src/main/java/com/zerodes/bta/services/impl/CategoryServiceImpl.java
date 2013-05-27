@@ -23,12 +23,12 @@ public class CategoryServiceImpl implements CategoryService {
 	
 	@Override
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-	public void add(final User user, final String name, final CategoryTypeEnum type, final boolean creditCardPayment) {
+	public void add(final User user, final String name, final CategoryTypeEnum type, final boolean ignoreForSummary) {
 		Category category = new Category();
 		category.setUser(user);
 		category.setName(name);
 		category.setType(type);
-		category.setCreditCardPayment(creditCardPayment);
+		category.setIgnoreForSummary(ignoreForSummary);
 		categoryDao.store(category);
 	}
 
@@ -46,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
 		CategoryDto categoryDto = new CategoryDto();
 		categoryDto.setName(category.getName());
 		categoryDto.setType(category.getType());
-		categoryDto.setCreditCardPayment(category.isCreditCardPayment());
+		categoryDto.setIgnoreForSummary(category.isIgnoreForSummary());
 		return categoryDto;
 	}
 }

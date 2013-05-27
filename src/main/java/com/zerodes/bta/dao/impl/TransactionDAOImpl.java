@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zerodes.bta.dao.TransactionDAO;
+import com.zerodes.bta.domain.Category;
 import com.zerodes.bta.domain.Transaction;
 import com.zerodes.bta.domain.User;
 
@@ -62,5 +63,18 @@ public class TransactionDAOImpl extends AbstractJpaDao<Transaction> implements T
 			results.add(descriptionVendor);
 		}
 		return results;
+	}
+
+	@Override
+	public Transaction findExistingTransaction(User user, int transactionYear,
+			int transactionMonth, int transactionDay, double amount,
+			String description, String vendor) {
+		Query query = createNamedQuery("findExistingTransaction", user,
+				transactionYear, transactionMonth, transactionDay, amount, description, vendor);
+		List<Transaction> results = query.getResultList();
+		if (results.size() == 0) {
+			return null;
+		}
+		return results.get(0);
 	}
 }
