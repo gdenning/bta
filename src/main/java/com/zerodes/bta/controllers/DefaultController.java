@@ -1,7 +1,6 @@
 package com.zerodes.bta.controllers;
 
 import java.io.IOException;
-import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.zerodes.bta.dto.CategoryDto;
 import com.zerodes.bta.dto.SummaryDto;
+import com.zerodes.bta.dto.SummaryType;
 import com.zerodes.bta.dto.TransactionDto;
 import com.zerodes.bta.enums.CategoryTypeEnum;
 import com.zerodes.bta.services.CategoryAssignmentService;
@@ -55,8 +55,10 @@ public class DefaultController extends AbstractController {
 	@RequestMapping(value = "/summary")
 	public ModelAndView handleSummaryRequest(final HttpServletRequest request) {
 		Pair<Integer, Integer> yearMonthPair = convertPeriodStringToYearMonthPair(request.getParameter("period"));
-		SummaryDto summaryDto = determineSummaryDtoForPeriod(yearMonthPair);
+		SummaryDto summaryDto = summaryService.getSummary(getAuthenticatedUser(), yearMonthPair.getLeft(), yearMonthPair.getRight());
 		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("monthEnum", SummaryType.MONTH);
+		model.put("yearAverageEnum", SummaryType.YEAR_AVERAGE);
 		model.put("summary", summaryDto);
 		model.put("periods", getPeriods());
 		model.put("selectedPeriod", convertYearMonthPairToPeriodString(yearMonthPair));
@@ -142,16 +144,6 @@ public class DefaultController extends AbstractController {
 	public String handleSaveCategoryAssociationsRequest(final HttpServletRequest request) {
 		categoryAssignmentService.save(getAuthenticatedUser(), request.getParameterMap());
 		return "redirect:categoryAssociations";
-	}
-
-	private SummaryDto determineSummaryDtoForPeriod(Pair<Integer, Integer> yearMonthPair) {
-		SummaryDto summaryDto = null;
-		if (yearMonthPair.getRight() == null) {
-			summaryDto = summaryService.getSummary(getAuthenticatedUser(), yearMonthPair.getLeft());
-		} else {
-			summaryDto = summaryService.getSummary(getAuthenticatedUser(), yearMonthPair.getLeft(), yearMonthPair.getRight());
-		}
-		return summaryDto;
 	}
 
 	private List<TransactionDto> determineTransactionsForPeriod(Pair<Integer, Integer> yearMonthPair) {

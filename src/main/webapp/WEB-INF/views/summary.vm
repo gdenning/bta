@@ -21,7 +21,8 @@
 		<tr>
 			<th></th>
 			<th>Category</th>
-			<th>Amount</th>
+			<th>Month Amount</th>
+			<th>Year Average</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -32,13 +33,15 @@
 		<th rowspan="$summary.getRevenue().size()">Revenue</td>
 #set( $first = false)
 #end
-		<td>$revenue.getLeft()</td>
-		<td>$summary.formatCurrency($revenue.getRight())</td>
+		<td>$revenue.getCategory()</td>
+		<td>$summary.formatCurrency($revenue.getAmount($monthEnum))</td>
+		<td>$summary.formatCurrency($revenue.getAmount($yearAverageEnum))</td>
 	</tr>
 #end
 	<tr>
 		<th colspan="2">Revenue Total</td>
-		<td><b>$summary.formatCurrency($summary.getRevenueTotal())</b></td>
+		<td><b>$summary.formatCurrency($summary.getRevenueTotal($monthEnum))</b></td>
+		<td><b>$summary.formatCurrency($summary.getRevenueTotal($yearAverageEnum))</b></td>
 	</tr>
 #set( $first = true )
 #foreach( $expense in $summary.getExpenses() )
@@ -47,17 +50,20 @@
 		<th rowspan="$summary.getExpenses().size()">Expenses</td>
 #set( $first = false)
 #end
-		<td>$expense.getLeft()</td>
-		<td>$summary.formatCurrency($expense.getRight())</td>
+		<td>$expense.getCategory()</td>
+		<td>$summary.formatCurrency($expense.getAmount($monthEnum))</td>
+		<td>$summary.formatCurrency($expense.getAmount($yearAverageEnum))</td>
 	</tr>
 #end
 	<tr>
 		<th colspan="2">Expenses Total</td>
-		<td><b>$summary.formatCurrency($summary.getExpensesTotal())</b></td>
+		<td><b>$summary.formatCurrency($summary.getExpensesTotal($monthEnum))</b></td>
+		<td><b>$summary.formatCurrency($summary.getExpensesTotal($yearAverageEnum))</b></td>
 	</tr>
 	<tr>
 		<th colspan="2">Savings (Losses)</td>
-		<td><b>$summary.formatCurrency($summary.getSavingsTotal())</b></td>
+		<td><b>$summary.formatCurrency($summary.getSavingsTotal($monthEnum))</b></td>
+		<td><b>$summary.formatCurrency($summary.getSavingsTotal($yearAverageEnum))</b></td>
 	</tr>
 	</tbody>
 </table>

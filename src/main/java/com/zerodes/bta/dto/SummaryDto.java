@@ -2,58 +2,64 @@ package com.zerodes.bta.dto;
 
 import java.text.NumberFormat;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 public class SummaryDto {
-	private Set<Pair<String, Double>> revenue = new TreeSet<Pair<String, Double>>(new RevenueExpenseComparator());
-	private Double revenueTotal = 0d;
-	private Set<Pair<String, Double>> expenses = new TreeSet<Pair<String, Double>>(new RevenueExpenseComparator());
-	private Double expensesTotal = 0d;
-	private Double savingsTotal;
-	private Double savingsPercent;
+	private Set<SummaryCategoryDto> categories = new HashSet<SummaryCategoryDto>();
 
-	public Set<Pair<String, Double>> getRevenue() {
-		return revenue;
+	public Set<SummaryCategoryDto> getCategories() {
+		return categories;
+	}
+	
+	public Set<SummaryCategoryDto> getRevenue() {
+		Set<SummaryCategoryDto> result = new TreeSet<SummaryCategoryDto>(new RevenueExpenseComparator());
+		for (SummaryCategoryDto summaryCategory : categories) {
+			if (summaryCategory.getAmount(SummaryType.MONTH) > 0) {
+				result.add(summaryCategory);
+			}
+		}
+		return result;
 	}
 
-	public Double getRevenueTotal() {
-		return revenueTotal;
+	public Set<SummaryCategoryDto> getExpenses() {
+		Set<SummaryCategoryDto> result = new TreeSet<SummaryCategoryDto>(new RevenueExpenseComparator());
+		for (SummaryCategoryDto summaryCategory : categories) {
+			if (summaryCategory.getAmount(SummaryType.MONTH) < 0) {
+				result.add(summaryCategory);
+			}
+		}
+		return result;
 	}
 
-	public void setRevenueTotal(Double revenueTotal) {
-		this.revenueTotal = revenueTotal;
+	public Double getRevenueTotal(SummaryType type) {
+		Double result = 0d;
+		for (SummaryCategoryDto summaryCategoryDto : categories) {
+			if (summaryCategoryDto.getAmount(type) > 0d) {
+				result = result + summaryCategoryDto.getAmount(type);
+			}
+		}
+		return result;
 	}
 
-	public Set<Pair<String, Double>> getExpenses() {
-		return expenses;
+	public Double getExpensesTotal(SummaryType type) {
+		Double result = 0d;
+		for (SummaryCategoryDto summaryCategoryDto : categories) {
+			if (summaryCategoryDto.getAmount(type) < 0d) {
+				result = result - summaryCategoryDto.getAmount(type);
+			}
+		}
+		return result;
 	}
 
-	public Double getExpensesTotal() {
-		return expensesTotal;
+	public Double getSavingsTotal(SummaryType type) {
+		return getRevenueTotal(type) - getExpensesTotal(type);
 	}
 
-	public void setExpensesTotal(Double expensesTotal) {
-		this.expensesTotal = expensesTotal;
-	}
-
-	public Double getSavingsTotal() {
-		return savingsTotal;
-	}
-
-	public void setSavingsTotal(Double savingsTotal) {
-		this.savingsTotal = savingsTotal;
-	}
-
-	public Double getSavingsPercent() {
-		return savingsPercent;
-	}
-
-	public void setSavingsPercent(Double savingsPercent) {
-		this.savingsPercent = savingsPercent;
+	public Double getSavingsPercent(SummaryType type) {
+		return getSavingsTotal(type) / getRevenueTotal(type);
 	}
 
 	public String formatCurrency(Double number) {
@@ -61,10 +67,10 @@ public class SummaryDto {
 		return numberFormatter.format(number);
 	}
 	
-	private static class RevenueExpenseComparator implements Comparator<Pair<String, Double>> {
+	private static class RevenueExpenseComparator implements Comparator<SummaryCategoryDto> {
 		@Override
-		public int compare(Pair<String, Double> o1, Pair<String, Double> o2) {
-			return o2.getRight().compareTo(o1.getRight());
+		public int compare(SummaryCategoryDto o1, SummaryCategoryDto o2) {
+			return o2.getAmount(SummaryType.MONTH).compareTo(o1.getAmount(SummaryType.MONTH));
 		}
 		
 	}
