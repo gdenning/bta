@@ -28,6 +28,7 @@ import com.zerodes.bta.dto.CategoryDto;
 import com.zerodes.bta.dto.SummaryDto;
 import com.zerodes.bta.dto.SummaryType;
 import com.zerodes.bta.dto.TransactionDto;
+import com.zerodes.bta.dto.VelocityFormatter;
 import com.zerodes.bta.enums.CategoryTypeEnum;
 import com.zerodes.bta.services.CategoryAssignmentService;
 import com.zerodes.bta.services.CategoryService;
@@ -57,6 +58,7 @@ public class DefaultController extends AbstractController {
 		Pair<Integer, Integer> yearMonthPair = convertPeriodStringToYearMonthPair(request.getParameter("period"));
 		SummaryDto summaryDto = summaryService.getSummary(getAuthenticatedUser(), yearMonthPair.getLeft(), yearMonthPair.getRight());
 		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("velocityFormatter", new VelocityFormatter());
 		model.put("monthEnum", SummaryType.MONTH);
 		model.put("yearAverageEnum", SummaryType.YEAR_AVERAGE);
 		model.put("summary", summaryDto);
@@ -71,11 +73,17 @@ public class DefaultController extends AbstractController {
 	@RequestMapping(value = "/transactions")
 	public ModelAndView handleTransactionsRequest(final HttpServletRequest request) {
 		Pair<Integer, Integer> yearMonthPair = convertPeriodStringToYearMonthPair(request.getParameter("period"));
+		String category = request.getParameter("category");
+		if (category == null) {
+			category = "null";
+		}
 		List<TransactionDto> transactions = determineTransactionsForPeriod(yearMonthPair);
 		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("velocityFormatter", new VelocityFormatter());
 		model.put("periods", getPeriods());
 		model.put("transactions", transactions);
 		model.put("selectedPeriod", convertYearMonthPairToPeriodString(yearMonthPair));
+		model.put("selectedCategory", category);
 		return new ModelAndView("transactions", model);
 	}
 

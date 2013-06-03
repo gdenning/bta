@@ -1,11 +1,11 @@
 package com.zerodes.bta.dto;
 
-import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.apache.commons.lang.builder.CompareToBuilder;
 
 public class SummaryDto {
 	private Set<SummaryCategoryDto> categories = new HashSet<SummaryCategoryDto>();
@@ -17,7 +17,7 @@ public class SummaryDto {
 	public Set<SummaryCategoryDto> getRevenue() {
 		Set<SummaryCategoryDto> result = new TreeSet<SummaryCategoryDto>(new RevenueExpenseComparator());
 		for (SummaryCategoryDto summaryCategory : categories) {
-			if (summaryCategory.getAmount(SummaryType.MONTH) > 0) {
+			if (summaryCategory.getAmount(SummaryType.MONTH) > 0 || summaryCategory.getAmount(SummaryType.YEAR_AVERAGE) > 0) {
 				result.add(summaryCategory);
 			}
 		}
@@ -27,7 +27,7 @@ public class SummaryDto {
 	public Set<SummaryCategoryDto> getExpenses() {
 		Set<SummaryCategoryDto> result = new TreeSet<SummaryCategoryDto>(new RevenueExpenseComparator());
 		for (SummaryCategoryDto summaryCategory : categories) {
-			if (summaryCategory.getAmount(SummaryType.MONTH) < 0) {
+			if (summaryCategory.getAmount(SummaryType.MONTH) < 0 || summaryCategory.getAmount(SummaryType.YEAR_AVERAGE) < 0) {
 				result.add(summaryCategory);
 			}
 		}
@@ -62,16 +62,13 @@ public class SummaryDto {
 		return getSavingsTotal(type) / getRevenueTotal(type);
 	}
 
-	public String formatCurrency(Double number) {
-		NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(Locale.US);
-		return numberFormatter.format(number);
-	}
-	
 	private static class RevenueExpenseComparator implements Comparator<SummaryCategoryDto> {
 		@Override
 		public int compare(SummaryCategoryDto o1, SummaryCategoryDto o2) {
-			return o2.getAmount(SummaryType.MONTH).compareTo(o1.getAmount(SummaryType.MONTH));
+			return new CompareToBuilder()
+				.append(o1.getAmount(SummaryType.MONTH), o2.getAmount(SummaryType.MONTH))
+				.append(o1.getCategory(), o2.getCategory())
+				.toComparison();
 		}
-		
 	}
 }

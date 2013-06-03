@@ -15,6 +15,7 @@
 #end
 #end
 		</select>
+		<a href="transactions?period=$selectedPeriod">All Categories</a>
 </form>
 <table class="table">
 	<thead>
@@ -28,13 +29,15 @@
 	</thead>
 	<tbody>
 #foreach( $transaction in $transactions )
+#if ($selectedCategory.equals("null") || $selectedCategory.equals($!transaction.category.name))
 	<tr>
 		<td>${transaction.transactionYear}-${transaction.transactionMonth}-${transaction.transactionDay}</td>
-		<td>$transaction.amount</td>
+		<td>$velocityFormatter.formatCurrency($transaction.amount)</td>
 		<td>$transaction.description</td>
 		<td>$transaction.vendor</td>
 		<td>$!transaction.category.name</td>
 	</tr>
+#end
 #end
 	</tbody>
 </table>

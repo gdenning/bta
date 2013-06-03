@@ -1,5 +1,7 @@
 package com.zerodes.bta.dto;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.joda.time.DateTime;
 
 public class SummaryCategoryDto {
@@ -28,5 +30,29 @@ public class SummaryCategoryDto {
 			this.monthAmount = this.monthAmount + amount;
 		}
 		this.yearAmount = this.yearAmount + amount;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder()
+			.append(category)
+			.toHashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof SummaryCategoryDto)) {
+			return false;
+		}
+		SummaryCategoryDto other = (SummaryCategoryDto) obj;
+		return new EqualsBuilder()
+			.append(category, other.category)
+			.isEquals();
 	}
 }

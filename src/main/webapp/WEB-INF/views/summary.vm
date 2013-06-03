@@ -34,14 +34,14 @@
 #set( $first = false)
 #end
 		<td>$revenue.getCategory()</td>
-		<td>$summary.formatCurrency($revenue.getAmount($monthEnum))</td>
-		<td>$summary.formatCurrency($revenue.getAmount($yearAverageEnum))</td>
+		<td><a href="transactions?period=$selectedPeriod&category=$revenue.getCategory()">$velocityFormatter.formatCurrency($revenue.getAmount($monthEnum))</a></td>
+		<td>$velocityFormatter.formatCurrency($revenue.getAmount($yearAverageEnum))</td>
 	</tr>
 #end
 	<tr>
 		<th colspan="2">Revenue Total</td>
-		<td><b>$summary.formatCurrency($summary.getRevenueTotal($monthEnum))</b></td>
-		<td><b>$summary.formatCurrency($summary.getRevenueTotal($yearAverageEnum))</b></td>
+		<td><b>$velocityFormatter.formatCurrency($summary.getRevenueTotal($monthEnum))</b></td>
+		<td><b>$velocityFormatter.formatCurrency($summary.getRevenueTotal($yearAverageEnum))</b></td>
 	</tr>
 #set( $first = true )
 #foreach( $expense in $summary.getExpenses() )
@@ -51,19 +51,19 @@
 #set( $first = false)
 #end
 		<td>$expense.getCategory()</td>
-		<td>$summary.formatCurrency($expense.getAmount($monthEnum))</td>
-		<td>$summary.formatCurrency($expense.getAmount($yearAverageEnum))</td>
+		<td><a href="transactions?period=$selectedPeriod&category=$expense.getCategory()">$velocityFormatter.formatCurrency($expense.getAmount($monthEnum))</a></td>
+		<td>$velocityFormatter.formatCurrency($expense.getAmount($yearAverageEnum))</td>
 	</tr>
 #end
 	<tr>
 		<th colspan="2">Expenses Total</td>
-		<td><b>$summary.formatCurrency($summary.getExpensesTotal($monthEnum))</b></td>
-		<td><b>$summary.formatCurrency($summary.getExpensesTotal($yearAverageEnum))</b></td>
+		<td><b>$velocityFormatter.formatCurrency($summary.getExpensesTotal($monthEnum))</b></td>
+		<td><b>$velocityFormatter.formatCurrency($summary.getExpensesTotal($yearAverageEnum))</b></td>
 	</tr>
 	<tr>
 		<th colspan="2">Savings (Losses)</td>
-		<td><b>$summary.formatCurrency($summary.getSavingsTotal($monthEnum))</b></td>
-		<td><b>$summary.formatCurrency($summary.getSavingsTotal($yearAverageEnum))</b></td>
+		<td><b>$velocityFormatter.formatCurrency($summary.getSavingsTotal($monthEnum))</b></td>
+		<td><b>$velocityFormatter.formatCurrency($summary.getSavingsTotal($yearAverageEnum))</b></td>
 	</tr>
 	</tbody>
 </table>
