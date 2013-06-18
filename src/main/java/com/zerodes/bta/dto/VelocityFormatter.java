@@ -8,4 +8,8 @@ public class VelocityFormatter {
 		NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 		return numberFormatter.format(number);
 	}
+	
+	public boolean isNull(Object value) {
+		return value == null;
+	}
 }
