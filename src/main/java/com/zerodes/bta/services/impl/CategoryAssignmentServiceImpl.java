@@ -59,15 +59,15 @@ public class CategoryAssignmentServiceImpl implements CategoryAssignmentService 
 	}
 
 	@Override
-	public CategoryDto findCategoryForVendorAndDescription(User user, String description, String vendor) {
-		CategoryAssignment categoryAssignment = categoryAssignmentDao.findByVendorAndDescription(user, description, vendor);
+	public CategoryDto findCategoryForVendorAndDescription(User user, String vendor, String description) {
+		CategoryAssignment categoryAssignment = categoryAssignmentDao.findByVendorAndDescription(user, vendor, description);
 		return categoryService.convertCategoryToCategoryDto(categoryAssignment.getCategory());
 	}
 	
 	@Override
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
 	public void save(final User user, final String description, final String vendor, final Category category) {
-		CategoryAssignment categoryAssignment = categoryAssignmentDao.findByVendorAndDescription(user, description, vendor);
+		CategoryAssignment categoryAssignment = categoryAssignmentDao.findByVendorAndDescription(user, vendor, description);
 		if (categoryAssignment == null) {
 			categoryAssignment = new CategoryAssignment();
 			categoryAssignment.setUser(user);
