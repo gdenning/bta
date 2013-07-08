@@ -1,10 +1,12 @@
 package com.zerodes.bta.services.impl;
 
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +42,18 @@ public class CategoryAssignmentServiceImpl implements CategoryAssignmentService 
 	
 	@Override
 	public Set<CategoryAssignmentDto> findCategoryAssignments(final User user) {
-		Set<CategoryAssignmentDto> results = new HashSet<CategoryAssignmentDto>();
+		Set<CategoryAssignmentDto> results = new TreeSet<CategoryAssignmentDto>(new Comparator<CategoryAssignmentDto>() {
+
+			@Override
+			public int compare(CategoryAssignmentDto o1, CategoryAssignmentDto o2) {
+				return new CompareToBuilder()
+					.append(o1.getCategory() != null, o2.getCategory() != null)
+					.append(o1.getVendor(), o2.getVendor())
+					.append(o1.getDescription(), o2.getDescription())
+					.toComparison();
+			}
+			
+		});
 		
 		// Load actual category assignments
 		List<CategoryAssignment> categoryAssignments = categoryAssignmentDao.findByUser(user);
