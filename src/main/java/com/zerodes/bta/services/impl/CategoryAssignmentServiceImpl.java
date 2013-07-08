@@ -1,10 +1,12 @@
 package com.zerodes.bta.services.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.tuple.Pair;
@@ -41,9 +43,25 @@ public class CategoryAssignmentServiceImpl implements CategoryAssignmentService 
 	private CategoryService categoryService;
 	
 	@Override
-	public Set<CategoryAssignmentDto> findCategoryAssignments(final User user) {
-		Set<CategoryAssignmentDto> results = new TreeSet<CategoryAssignmentDto>(new Comparator<CategoryAssignmentDto>() {
-
+	public List<CategoryAssignmentDto> findCategoryAssignments(final User user) {
+		Set<CategoryAssignmentDto> categoryAssignmentsSet = new HashSet<CategoryAssignmentDto>();
+		
+		// Load actual category assignments
+		List<CategoryAssignment> categoryAssignments = categoryAssignmentDao.findByUser(user);
+		for (CategoryAssignment categoryAssignment : categoryAssignments) {
+			categoryAssignmentsSet.add(convertCategoryAssignmentToCategoryAssignmentDto(categoryAssignment));
+		}
+		
+		// Load potential category assignments
+		List<Pair<String, String>> uniqueDescriptionVendorCombinations = transactionDao.findUniqueDescriptionVendorCombinations(user);
+		for (Pair<String, String> descriptionVendorCombination : uniqueDescriptionVendorCombinations) {
+			categoryAssignmentsSet.add(convertDescriptionVendorToCategoryAssignmentDto(
+					descriptionVendorCombination.getLeft(), descriptionVendorCombination.getRight()));
+		}
+		
+		List<CategoryAssignmentDto> results = new ArrayList<CategoryAssignmentDto>(categoryAssignmentsSet);
+		
+		Collections.sort(results, new Comparator<CategoryAssignmentDto>() {
 			@Override
 			public int compare(CategoryAssignmentDto o1, CategoryAssignmentDto o2) {
 				return new CompareToBuilder()
@@ -52,21 +70,7 @@ public class CategoryAssignmentServiceImpl implements CategoryAssignmentService 
 					.append(o1.getDescription(), o2.getDescription())
 					.toComparison();
 			}
-			
 		});
-		
-		// Load actual category assignments
-		List<CategoryAssignment> categoryAssignments = categoryAssignmentDao.findByUser(user);
-		for (CategoryAssignment categoryAssignment : categoryAssignments) {
-			results.add(convertCategoryAssignmentToCategoryAssignmentDto(categoryAssignment));
-		}
-		
-		// Load potential category assignments
-		List<Pair<String, String>> uniqueDescriptionVendorCombinations = transactionDao.findUniqueDescriptionVendorCombinations(user);
-		for (Pair<String, String> descriptionVendorCombination : uniqueDescriptionVendorCombinations) {
-			results.add(convertDescriptionVendorToCategoryAssignmentDto(
-					descriptionVendorCombination.getLeft(), descriptionVendorCombination.getRight()));
-		}
 		
 		return results;
 	}
@@ -94,7 +98,7 @@ public class CategoryAssignmentServiceImpl implements CategoryAssignmentService 
 	@Override
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
 	public void save(final User user, final Map<String, String[]> parameterMap) {
-		Set<CategoryAssignmentDto> categoryAssignments = findCategoryAssignments(user);
+		List<CategoryAssignmentDto> categoryAssignments = findCategoryAssignments(user);
 		for (String categoryAssignmentLabel : parameterMap.keySet()) {
 			String categoryName = parameterMap.get(categoryAssignmentLabel)[0];
 			if (!categoryName.isEmpty()) {
