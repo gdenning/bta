@@ -8,7 +8,6 @@ import com.zerodes.bta.enums.CategoryTypeEnum;
 public class CategoryDto {
 	private String name;
 	private CategoryTypeEnum type;
-	private boolean ignoreForSummary;
 	
 	public String getName() {
 		return name;
@@ -21,12 +20,6 @@ public class CategoryDto {
 	}
 	public void setType(CategoryTypeEnum type) {
 		this.type = type;
-	}
-	public boolean isIgnoreForSummary() {
-		return ignoreForSummary;
-	}
-	public void setIgnoreForSummary(boolean ignoreForSummary) {
-		this.ignoreForSummary = ignoreForSummary;
 	}
 	
 	@Override

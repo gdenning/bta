@@ -29,20 +29,16 @@ public class SummaryServiceImpl implements SummaryService {
 		Map<String, SummaryCategoryDto> categoriesMap = new HashMap<String, SummaryCategoryDto>();
 		for (TransactionDto transaction : transactions) {
 			String categoryName = "UNASSIGNED";
-			boolean ignore = false;
 			if (transaction.getCategory() != null) {
 				categoryName = transaction.getCategory().getName();
-				ignore = transaction.getCategory().isIgnoreForSummary();
 			}
-			if (!ignore) {
-				SummaryCategoryDto summaryCategoryDto = categoriesMap.get(categoryName);
-				if (summaryCategoryDto == null) {
-					summaryCategoryDto = new SummaryCategoryDto();
-					summaryCategoryDto.setCategory(categoryName);
-					categoriesMap.put(categoryName, summaryCategoryDto);
-				}
-				summaryCategoryDto.addToAmount(transaction.getAmount(), transaction.getTransactionMonth() == month);
+			SummaryCategoryDto summaryCategoryDto = categoriesMap.get(categoryName);
+			if (summaryCategoryDto == null) {
+				summaryCategoryDto = new SummaryCategoryDto();
+				summaryCategoryDto.setCategory(categoryName);
+				categoriesMap.put(categoryName, summaryCategoryDto);
 			}
+			summaryCategoryDto.addToAmount(transaction.getAmount(), transaction.getTransactionMonth() == month);
 		}
 		result.getCategories().addAll(categoriesMap.values());
 		return result;
