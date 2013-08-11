@@ -6,11 +6,11 @@ import com.zerodes.bta.domain.Transaction;
 import com.zerodes.bta.domain.User;
 
 @Component
-public class BankCSVStrategy implements CSVStrategy {
+public class ScotiaBankCreditCardCSVStrategy implements CSVStrategy {
 
 	@Override
 	public boolean isValidFormat(String[] line) {
-		return (line.length == 5);
+		return (line.length == 3);
 	}
 
 	@Override
@@ -23,9 +23,9 @@ public class BankCSVStrategy implements CSVStrategy {
 		transaction.setTransactionYear(Integer.parseInt("20" + dateParts[2]));
 		transaction.setTransactionMonth(Integer.parseInt(dateParts[0]));
 		transaction.setTransactionDay(Integer.parseInt(dateParts[1]));
-		transaction.setAmount(Double.parseDouble(line[1]));
-		transaction.setDescription(line[3]);
-		transaction.setVendor(line[4]);
+		transaction.setVendor(line[1]);
+		transaction.setAmount(Double.parseDouble(line[2]));
+		transaction.setDescription("");
 		return transaction;
 	}
 

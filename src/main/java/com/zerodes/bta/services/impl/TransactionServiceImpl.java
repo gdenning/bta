@@ -46,23 +46,32 @@ public class TransactionServiceImpl implements TransactionService {
 			throws IOException {
 		CSVReader reader = new CSVReader(new InputStreamReader(stream));
 		// nextLine[] is an array of values from the line
-		String[] nextLine;
-		while ((nextLine = reader.readNext()) != null) {
-			Transaction transaction = null;
-			for (CSVStrategy csvStrategy : csvStrategies) {
-				if (csvStrategy.isValidFormat(nextLine)) {
-					transaction = csvStrategy.convertCSVLineToTransaction(user, filename, nextLine);
+		String[] nextLine = reader.readNext();
+		CSVStrategy csvStrategy = identifyCSVStrategy(nextLine);
+		if (csvStrategy == null) {
+			throw new RuntimeException("Unable to recognize CSV format");
+		}
+		while (nextLine != null) {
+			Transaction transaction = csvStrategy.convertCSVLineToTransaction(user, filename, nextLine);
+			if (transaction != null) {
+				if (transactionDAO.findExistingTransaction(user,
+						transaction.getTransactionYear(), transaction.getTransactionMonth(), transaction.getTransactionDay(),
+						transaction.getAmount(), transaction.getDescription(), transaction.getVendor()) == null) {
+					transactionDAO.store(transaction);
 				}
 			}
-			if (transaction == null) {
-				throw new RuntimeException("Unable to recognize CSV format");
-			}
-			if (transactionDAO.findExistingTransaction(user,
-					transaction.getTransactionYear(), transaction.getTransactionMonth(), transaction.getTransactionDay(),
-					transaction.getAmount(), transaction.getDescription(), transaction.getVendor()) == null) {
-				transactionDAO.store(transaction);
+			nextLine = reader.readNext();
+		}
+	}
+
+	private CSVStrategy identifyCSVStrategy(String[] firstLine) {
+		CSVStrategy csvStrategy = null;
+		for (CSVStrategy csvStrategyIter : csvStrategies) {
+			if (csvStrategyIter.isValidFormat(firstLine)) {
+				csvStrategy = csvStrategyIter;
 			}
 		}
+		return csvStrategy;
 	}
 
 	@Override
