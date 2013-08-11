@@ -129,8 +129,7 @@ public class DefaultController extends AbstractController {
 	@RequestMapping(value = "/addCategory", method = { RequestMethod.POST })
 	public String handleAddCategoryRequest(	final HttpServletRequest request) {
 		categoryService.add(getAuthenticatedUser(), request.getParameter("categoryName"),
-				CategoryTypeEnum.valueOf(request.getParameter("categoryType")),
-				Boolean.parseBoolean(request.getParameter("ignoreForSummary")));
+				CategoryTypeEnum.valueOf(request.getParameter("categoryType")));
 		return "redirect:categories";
 	}
 

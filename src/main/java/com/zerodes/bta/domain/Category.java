@@ -45,9 +45,6 @@ public class Category {
 	@Enumerated(EnumType.STRING)
 	private CategoryTypeEnum type;
 	
-	@Column(name = "IgnoreForSummary", nullable = false)
-	private boolean ignoreForSummary;
-
 	public long getCategoryId() {
 		return categoryId;
 	}
@@ -80,20 +77,12 @@ public class Category {
 		this.type = type;
 	}
 
-	public boolean isIgnoreForSummary() {
-		return ignoreForSummary;
-	}
-
-	public void setIgnoreForSummary(boolean ignoreForSummary) {
-		this.ignoreForSummary = ignoreForSummary;
-	}
-
 	public String toString() {
 		return new ToStringBuilder(this)
 			.append("categoryId", categoryId)
 			.append("user", user)
 			.append("name", name)
-			.append("ignoreForSummary", ignoreForSummary)
+			.append("type", type)
 			.toString();
 	}
 
@@ -102,7 +91,7 @@ public class Category {
 		return new HashCodeBuilder()
 			.append(user)
 			.append(name)
-			.append(ignoreForSummary)
+			.append(type)
 			.toHashCode();
 	}
 
@@ -121,7 +110,7 @@ public class Category {
 		return new EqualsBuilder()
 			.append(user, other.user)
 			.append(name, other.name)
-			.append(ignoreForSummary, other.ignoreForSummary)
+			.append(type, other.type)
 			.isEquals();
 	}
 }

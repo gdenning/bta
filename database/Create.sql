@@ -5,7 +5,6 @@ CREATE TABLE `TCategory` (
   `UserId` int(20) NOT NULL,
   `Name` varchar(255) NOT NULL,
   `Type` varchar(20) NOT NULL,
-  `IgnoreForSummary` bit(1) NOT NULL,
   PRIMARY KEY (`CategoryId`),
   UNIQUE KEY `unique_constraint` (`UserId`,`Name`,`Type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8$$

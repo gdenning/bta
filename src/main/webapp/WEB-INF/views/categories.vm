@@ -8,26 +8,24 @@
 	Name: <input type="text" name="categoryName" />
 	Type:
 		<select name="categoryType">
-			<option value="EXPENSE">Expense</option>
-			<option value="REVENUE">Revenue</option>
+			<option value="VARIABLE">Variable</option>
+			<option value="FIXED_MONTHLY">Fixed Monthly</option>
+			<option value="FIXED_ANNUAL">Fixed Annual</option>
 		</select>
-	Ignore: <input type="checkbox" name="ignoreForSummary" value="true">
 	<input type="submit" value="Add" />
 </form>
 <table class="table">
 	<thead>
 		<tr>
-			<th>Name</th>
 			<th>Type</th>
-			<th>Ignore in Summary</th>
+			<th>Name</th>
 		</tr>
 	</thead>
 	<tbody>
 #foreach( $category in $categories )
 	<tr>
-		<td>$category.name</td>
 		<td>$category.type</td>
-		<td>$category.ignoreForSummary</td>
+		<td>$category.name</td>
 	</tr>
 #end
 	</tbody>

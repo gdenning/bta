@@ -8,7 +8,7 @@ import com.zerodes.bta.dto.CategoryDto;
 import com.zerodes.bta.enums.CategoryTypeEnum;
 
 public interface CategoryService {
-	void add(User user, String name, CategoryTypeEnum type, boolean ignoreForSummary);
+	void add(User user, String name, CategoryTypeEnum type);
 	List<CategoryDto> findCategories(User user);
 	CategoryDto convertCategoryToCategoryDto(Category category);
 }

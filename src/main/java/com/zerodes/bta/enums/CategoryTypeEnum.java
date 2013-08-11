@@ -1,6 +1,7 @@
 package com.zerodes.bta.enums;
 
 public enum CategoryTypeEnum {
-	REVENUE,
-	EXPENSE
+	FIXED_ANNUAL,
+	FIXED_MONTHLY,
+	VARIABLE
 }
