@@ -7,23 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.zerodes.bta.csvstrategy.CSVStrategy;
 import com.zerodes.bta.dao.CategoryAssignmentDAO;
 import com.zerodes.bta.dao.TransactionDAO;
-import com.zerodes.bta.domain.CategoryAssignment;
 import com.zerodes.bta.domain.Transaction;
 import com.zerodes.bta.domain.User;
 import com.zerodes.bta.dto.TransactionDto;
 import com.zerodes.bta.services.CategoryService;
 import com.zerodes.bta.services.TransactionService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -76,19 +75,22 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Override
 	public List<TransactionDto> findTransactions(User user, int year) {
-		return convertTransactionsToTransactionDtos(user, transactionDAO.findTransactionsByUserAndYear(user, year));
+		return convertTransactionsToTransactionDtos(transactionDAO.findTransactionsByUserAndYear(user, year));
 	}
 
 	@Override
 	public List<TransactionDto> findTransactions(User user, int year, int month) {
-		return convertTransactionsToTransactionDtos(user, transactionDAO.findTransactionsByUserAndMonth(user, year, month));
+		return convertTransactionsToTransactionDtos(transactionDAO.findTransactionsByUserAndMonth(user, year, month));
 	}
-	
-	private List<TransactionDto> convertTransactionsToTransactionDtos(User user, List<Transaction> transactions) {
+
+	@Override
+	public List<TransactionDto> findTransactions(User user, int year, int month, String categoryName) {
+		return convertTransactionsToTransactionDtos(transactionDAO.findTransactionsByUserAndMonthAndCategory(user, year, month, categoryName));
+	}
+
+	private List<TransactionDto> convertTransactionsToTransactionDtos(List<Transaction> transactions) {
 		List<TransactionDto> results = new ArrayList<TransactionDto>();
 		for (Transaction loadedTransaction : transactions) {
-			CategoryAssignment categoryAssignment = categoryAssignmentDAO.findByVendorAndDescription(
-					user, loadedTransaction.getVendor(), loadedTransaction.getDescription());
 			TransactionDto transactionDto = new TransactionDto();
 			transactionDto.setTransactionYear(loadedTransaction.getTransactionYear());
 			transactionDto.setTransactionMonth(loadedTransaction.getTransactionMonth());
@@ -96,10 +98,10 @@ public class TransactionServiceImpl implements TransactionService {
 			transactionDto.setDescription(loadedTransaction.getDescription());
 			transactionDto.setAmount(loadedTransaction.getAmount());
 			transactionDto.setVendor(loadedTransaction.getVendor());
-			transactionDto.setImportSource(loadedTransaction.getImportSource());
-			if (categoryAssignment != null) {
-				transactionDto.setCategory(categoryService.convertCategoryToCategoryDto(categoryAssignment.getCategory()));
+			if (loadedTransaction.getDerivedCategory() != null) {
+				transactionDto.setCategory(categoryService.convertCategoryToCategoryDto(loadedTransaction.getDerivedCategory()));
 			}
+			transactionDto.setImportSource(loadedTransaction.getImportSource());
 			results.add(transactionDto);
 		}
 		return results;

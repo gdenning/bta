@@ -74,10 +74,16 @@ public class DefaultController extends AbstractController {
 	public ModelAndView handleTransactionsRequest(final HttpServletRequest request) {
 		Pair<Integer, Integer> yearMonthPair = convertPeriodStringToYearMonthPair(request.getParameter("period"));
 		String category = request.getParameter("category");
+
+		List<TransactionDto> transactions = null;
 		if (category == null) {
-			category = "null";
+			transactions = transactionService.findTransactions(getAuthenticatedUser(), yearMonthPair.getLeft(), yearMonthPair.getRight());
+		} else if (category.equals("UNASSIGNED")) {
+			transactions = transactionService.findTransactions(getAuthenticatedUser(), yearMonthPair.getLeft(), yearMonthPair.getRight(), null);
+		} else {
+			transactions = transactionService.findTransactions(getAuthenticatedUser(), yearMonthPair.getLeft(), yearMonthPair.getRight(), category);
 		}
-		List<TransactionDto> transactions = determineTransactionsForPeriod(yearMonthPair);
+
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("velocityFormatter", new VelocityFormatter());
 		model.put("periods", getPeriods());
@@ -88,7 +94,7 @@ public class DefaultController extends AbstractController {
 	}
 
 	/**
-	 * Display the transactions page.
+	 * Accept upload of new CSV file.
 	 */
 	@RequestMapping(value = "/transactionsUpload", method = { RequestMethod.POST })
 	public String handleTransactionsUploadRequest(final HttpServletRequest request) {
@@ -153,16 +159,6 @@ public class DefaultController extends AbstractController {
 		return "redirect:categoryAssociations";
 	}
 
-	private List<TransactionDto> determineTransactionsForPeriod(Pair<Integer, Integer> yearMonthPair) {
-		List<TransactionDto> transactions = null;
-		if (yearMonthPair.getRight() == null) {
-			transactions = transactionService.findTransactions(getAuthenticatedUser(), yearMonthPair.getLeft());
-		} else {
-			transactions = transactionService.findTransactions(getAuthenticatedUser(), yearMonthPair.getLeft(), yearMonthPair.getRight());
-		}
-		return transactions;
-	}
-	
 	private String convertYearMonthPairToPeriodString(Pair<Integer, Integer> yearMonthPair) {
 		DateTime dateTime = new DateTime(yearMonthPair.getLeft(), yearMonthPair.getRight(), 1, 0, 0, 0);
 		return dateTime.toString("yyyy-MMM");

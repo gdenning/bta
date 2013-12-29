@@ -12,6 +12,8 @@ public interface TransactionDAO extends JpaDao<Transaction> {
 	Transaction findTransactionByPrimaryKey(long transactionId) throws DataAccessException;
 	List<Transaction> findTransactionsByUserAndYear(User user, int year);
 	List<Transaction> findTransactionsByUserAndMonth(User user, int year, int month);
+	List<Transaction> findTransactionsByUserAndMonthAndCategory(User user, int year, int month, String categoryName);
+	List<Transaction> findTransactionsByUserAndDescriptionAndVendor(User user, String description, String vendor);
 	List<Pair<String, String>> findUniqueDescriptionVendorCombinations(final User user);
 	Transaction findExistingTransaction(User user, int transactionYear, int transactionMonth, int transactionDay, double amount, String description, String vendor);
 }

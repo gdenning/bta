@@ -8,6 +8,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.zerodes.bta.dao.CategoryAssignmentDAO;
+import com.zerodes.bta.dao.CategoryDAO;
+import com.zerodes.bta.dao.TransactionDAO;
+import com.zerodes.bta.domain.Category;
+import com.zerodes.bta.domain.CategoryAssignment;
+import com.zerodes.bta.domain.Transaction;
+import com.zerodes.bta.domain.User;
+import com.zerodes.bta.dto.CategoryAssignmentDto;
+import com.zerodes.bta.dto.CategoryDto;
+import com.zerodes.bta.services.CategoryAssignmentService;
+import com.zerodes.bta.services.CategoryService;
+
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.zerodes.bta.dao.CategoryAssignmentDAO;
-import com.zerodes.bta.dao.CategoryDAO;
-import com.zerodes.bta.dao.TransactionDAO;
-import com.zerodes.bta.domain.Category;
-import com.zerodes.bta.domain.CategoryAssignment;
-import com.zerodes.bta.domain.User;
-import com.zerodes.bta.dto.CategoryAssignmentDto;
-import com.zerodes.bta.dto.CategoryDto;
-import com.zerodes.bta.services.CategoryAssignmentService;
-import com.zerodes.bta.services.CategoryService;
 
 @Service
 public class CategoryAssignmentServiceImpl implements CategoryAssignmentService {
@@ -93,6 +94,12 @@ public class CategoryAssignmentServiceImpl implements CategoryAssignmentService 
 		}
 		categoryAssignment.setCategory(category);
 		categoryAssignmentDao.store(categoryAssignment);
+
+		List<Transaction> transactions = transactionDao.findTransactionsByUserAndDescriptionAndVendor(user, description, vendor);
+		for (Transaction transaction : transactions) {
+			transaction.setDerivedCategory(category);
+			transactionDao.store(transaction);
+		}
 	}
 	
 	@Override

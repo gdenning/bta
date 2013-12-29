@@ -8,6 +8,10 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import com.zerodes.bta.dao.TransactionDAO;
+import com.zerodes.bta.domain.Transaction;
+import com.zerodes.bta.domain.User;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.dao.DataAccessException;
@@ -16,14 +20,9 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.zerodes.bta.dao.TransactionDAO;
-import com.zerodes.bta.domain.Category;
-import com.zerodes.bta.domain.Transaction;
-import com.zerodes.bta.domain.User;
-
 @Repository
 @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-public class TransactionDAOImpl extends AbstractJpaDao<Transaction> implements TransactionDAO {
+class TransactionDAOImpl extends AbstractJpaDao<Transaction> implements TransactionDAO {
 	@PersistenceContext(unitName = "entityManagerFactory")
 	private EntityManager entityManager;
 
@@ -42,6 +41,17 @@ public class TransactionDAOImpl extends AbstractJpaDao<Transaction> implements T
 	}
 
 	@Override
+	public List<Transaction> findTransactionsByUserAndMonthAndCategory(User user, int year, int month, String categoryName) {
+		Query query = null;
+		if (categoryName == null) {
+			query = createNamedQuery("findTransactionsByUserAndMonthAndUnassignedCategory", user, year, month);
+		} else {
+			query = createNamedQuery("findTransactionsByUserAndMonthAndCategory", user, year, month, categoryName);
+		}
+		return query.getResultList();
+	}
+
+	@Override
 	public List<Transaction> findTransactionsByUserAndYear(User user, int year) {
 		Query query = createNamedQuery("findTransactionsByUserAndYear", user, year);
 		return query.getResultList();
@@ -50,6 +60,12 @@ public class TransactionDAOImpl extends AbstractJpaDao<Transaction> implements T
 	@Override
 	public List<Transaction> findTransactionsByUserAndMonth(User user, int year, int month) {
 		Query query = createNamedQuery("findTransactionsByUserAndMonth", user, year, month);
+		return query.getResultList();
+	}
+
+	@Override
+	public List<Transaction> findTransactionsByUserAndDescriptionAndVendor(User user, String description, String vendor) {
+		Query query = createNamedQuery("findTransactionsByUserAndDescriptionAndVendor", user, description, vendor);
 		return query.getResultList();
 	}
 

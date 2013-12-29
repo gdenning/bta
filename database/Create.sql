@@ -7,7 +7,7 @@ CREATE TABLE `TCategory` (
   `Type` varchar(20) NOT NULL,
   PRIMARY KEY (`CategoryId`),
   UNIQUE KEY `unique_constraint` (`UserId`,`Name`,`Type`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8$$
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8$$
 
 
 delimiter $$
@@ -20,7 +20,7 @@ CREATE TABLE `TCategoryAssignment` (
   `Description` varchar(255) NOT NULL,
   PRIMARY KEY (`CategoryAssignmentId`),
   KEY `TCategoryAssignment_Unq` (`UserId`,`Vendor`,`Description`)
-) ENGINE=InnoDB AUTO_INCREMENT=1356 DEFAULT CHARSET=utf8$$
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8$$
 
 delimiter $$
 
@@ -33,10 +33,11 @@ CREATE TABLE `TTransaction` (
   `Amount` decimal(10,2) NOT NULL,
   `Description` varchar(255) NOT NULL,
   `Vendor` varchar(255) NOT NULL,
+  `DerivedCategoryID` int(20) NULL,
   `ImportSource` varchar(255) NOT NULL,
   PRIMARY KEY (`TransactionID`),
   UNIQUE KEY `TTransaction_Idx` (`UserId`,`TransactionYear`,`TransactionMonth`,`TransactionDay`,`Amount`,`Description`,`Vendor`)
-) ENGINE=InnoDB AUTO_INCREMENT=287 DEFAULT CHARSET=utf8$$
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8$$
 
 
 delimiter $$
@@ -48,4 +49,4 @@ CREATE TABLE `TUser` (
   `Name` varchar(50) NOT NULL,
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `UK_Email` (`Email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8$$
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8$$

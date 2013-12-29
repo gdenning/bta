@@ -20,8 +20,11 @@ import org.hibernate.annotations.ForeignKey;
 @Entity
 @Table(name = "TTransaction")
 @NamedQueries({
-	@NamedQuery(name = "findTransactionsByUserAndMonth", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 order by transactionDay"),
 	@NamedQuery(name = "findTransactionsByUserAndYear", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 order by transactionMonth, transactionDay"),
+	@NamedQuery(name = "findTransactionsByUserAndMonth", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 order by transactionDay"),
+	@NamedQuery(name = "findTransactionsByUserAndMonthAndCategory", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 and txn.derivedCategory.name = ?4 order by transactionMonth, transactionDay"),
+	@NamedQuery(name = "findTransactionsByUserAndMonthAndUnassignedCategory", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 and txn.derivedCategory = null order by transactionMonth, transactionDay"),
+	@NamedQuery(name = "findTransactionsByUserAndDescriptionAndVendor", query = "select txn from Transaction txn where user = ?1 and description = ?2 and vendor = ?3"),
 	@NamedQuery(name = "findUniqueDescriptionVendorCombinations", query = "select distinct txn.description, txn.vendor from Transaction txn where user = ?1"),
 	@NamedQuery(name = "findExistingTransaction", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 and transactionDay = ?4 and amount = ?5 and description = ?6 and vendor = ?7")
 })
@@ -32,7 +35,7 @@ public class Transaction {
 	private long transactionId;
 	
 	@ManyToOne
-	@JoinColumns( { @JoinColumn(name = "UserId", referencedColumnName = "UserId", nullable = false) })
+	@JoinColumn(name = "UserId", referencedColumnName = "UserId", nullable = false)
 	@ForeignKey(name = "FK_Transaction_User")
 	private User user;
 
@@ -53,6 +56,11 @@ public class Transaction {
 
 	@Column(name = "Vendor", length = 255, nullable = false)
 	private String vendor;
+
+	@ManyToOne
+	@JoinColumn(name = "DerivedCategoryID", referencedColumnName = "CategoryID", nullable = true)
+	@ForeignKey(name = "FK_Transaction_Category")
+	private Category derivedCategory;
 	
 	@Column(name = "ImportSource", length = 255, nullable = false)
 	private String importSource;
@@ -121,6 +129,14 @@ public class Transaction {
 		this.vendor = vendor;
 	}
 
+	public Category getDerivedCategory() {
+		return derivedCategory;
+	}
+
+	public void setDerivedCategory(Category derivedCategory) {
+		this.derivedCategory = derivedCategory;
+	}
+
 	public String getImportSource() {
 		return importSource;
 	}
@@ -139,6 +155,7 @@ public class Transaction {
 			.append("amount", amount)
 			.append("description", description)
 			.append("vendor", vendor)
+			.append("derivedCategory", derivedCategory)
 			.append("importSource", importSource)
 			.toString();
 	}

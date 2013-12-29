@@ -29,7 +29,6 @@
 	</thead>
 	<tbody>
 #foreach( $transaction in $transactions )
-#if ($selectedCategory.equals("null") || $selectedCategory.equals($!transaction.category.name) || ($selectedCategory.equals("UNASSIGNED") && $velocityFormatter.isNull($!transaction.category)))
 	<tr>
 		<td>${transaction.transactionYear}-${transaction.transactionMonth}-${transaction.transactionDay}</td>
 		<td>$velocityFormatter.formatCurrency($transaction.amount)</td>
@@ -37,7 +36,6 @@
 		<td>$transaction.vendor</td>
 		<td>$!transaction.category.name</td>
 	</tr>
-#end
 #end
 	</tbody>
 </table>
