@@ -18,7 +18,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @NamedQueries({
 		@NamedQuery(name = "findAllUsers", query = "select myUser from User myUser"),
 		@NamedQuery(name = "findUserByName", query = "select myUser from User myUser where myUser.name = ?1"),
-		@NamedQuery(name = "findUserByEmail", query = "select myUser from User myUser where myUser.email = ?1"),
+		@NamedQuery(name = "findUserByEmail", query = "select myUser from User myUser where myUser.email = ?1")
 })
 @Table(name = "TUser")
 public class User {

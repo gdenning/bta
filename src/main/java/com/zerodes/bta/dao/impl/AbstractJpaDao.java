@@ -34,8 +34,7 @@ public abstract class AbstractJpaDao<T> implements JpaDao<T> {
 	}
 	
 	public T store(final T objectToPersist) {
-		T result = getEntityManager().merge(objectToPersist);
-		return result;
+		return getEntityManager().merge(objectToPersist);
 	}
 	
 	public void remove(final T objectToDelete) {

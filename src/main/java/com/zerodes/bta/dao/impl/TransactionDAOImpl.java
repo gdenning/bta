@@ -42,7 +42,7 @@ class TransactionDAOImpl extends AbstractJpaDao<Transaction> implements Transact
 
 	@Override
 	public List<Transaction> findTransactionsByUserAndMonthAndCategory(User user, int year, int month, String categoryName) {
-		Query query = null;
+		Query query;
 		if (categoryName == null) {
 			query = createNamedQuery("findTransactionsByUserAndMonthAndUnassignedCategory", user, year, month);
 		} else {

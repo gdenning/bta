@@ -44,12 +44,9 @@ public class MyUserDetailsService implements UserDetailsService {
 		final GrantedAuthority grantedAuthority = new GrantedAuthorityImpl("ROLE_USER");
 		grantedAuthorities.add(grantedAuthority);
 
-		final UserDetails userDetails =
-			new org.springframework.security.core.userdetails.User(
-					user.getEmail(), user.getPassword(),
-					true, true, true, true, grantedAuthorities);
-
-		return userDetails;
+		return new org.springframework.security.core.userdetails.User(
+			user.getEmail(), user.getPassword(),
+			true, true, true, true, grantedAuthorities);
 	}
 
 }

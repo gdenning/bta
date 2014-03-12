@@ -8,7 +8,7 @@ import java.util.TreeSet;
 import org.apache.commons.lang.builder.CompareToBuilder;
 
 public class SummaryDto {
-	private Set<SummaryCategoryDto> categories = new HashSet<SummaryCategoryDto>();
+	private final Set<SummaryCategoryDto> categories = new HashSet<SummaryCategoryDto>();
 
 	public Set<SummaryCategoryDto> getCategories() {
 		return categories;

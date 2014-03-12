@@ -75,7 +75,7 @@ public class DefaultController extends AbstractController {
 		Pair<Integer, Integer> yearMonthPair = convertPeriodStringToYearMonthPair(request.getParameter("period"));
 		String category = request.getParameter("category");
 
-		List<TransactionDto> transactions = null;
+		List<TransactionDto> transactions;
 		if (category == null) {
 			transactions = transactionService.findTransactions(getAuthenticatedUser(), yearMonthPair.getLeft(), yearMonthPair.getRight());
 		} else if (category.equals("UNASSIGNED")) {
