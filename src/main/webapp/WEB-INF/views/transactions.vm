@@ -4,6 +4,10 @@
   <li><a href="categories">Categories</a></li>
   <li><a href="categoryAssociations">Category Associations</a></li>
 </ul>
+<form method="POST" action="transactionsUpload" enctype="multipart/form-data">
+    Please select a file to upload : <input type="file" name="file" />
+    <input type="submit" value="Upload" />
+</form>
 <form method="GET" action="transactions">
 	Period:
 		<select name="period" onchange="this.form.submit()">
@@ -39,7 +43,3 @@
 #end
 	</tbody>
 </table>
-<form method="POST" action="transactionsUpload" enctype="multipart/form-data">
-	Please select a file to upload : <input type="file" name="file" />
-	<input type="submit" value="Upload" />
-</form>
