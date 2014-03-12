@@ -20,10 +20,10 @@ import org.hibernate.annotations.ForeignKey;
 @Entity
 @Table(name = "TTransaction")
 @NamedQueries({
-	@NamedQuery(name = "findTransactionsByUserAndYear", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 order by transactionMonth, transactionDay"),
-	@NamedQuery(name = "findTransactionsByUserAndMonth", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 order by transactionDay"),
-	@NamedQuery(name = "findTransactionsByUserAndMonthAndCategory", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 and txn.derivedCategory.name = ?4 order by transactionMonth, transactionDay"),
-	@NamedQuery(name = "findTransactionsByUserAndMonthAndUnassignedCategory", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 and txn.derivedCategory = null order by transactionMonth, transactionDay"),
+	@NamedQuery(name = "findTransactionsByUserAndYear", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 order by transactionMonth, transactionDay, abs(amount)"),
+	@NamedQuery(name = "findTransactionsByUserAndMonth", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 order by transactionDay, abs(amount)"),
+	@NamedQuery(name = "findTransactionsByUserAndMonthAndCategory", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 and txn.derivedCategory.name = ?4 order by transactionMonth, transactionDay, abs(amount)"),
+	@NamedQuery(name = "findTransactionsByUserAndMonthAndUnassignedCategory", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 and txn.derivedCategory = null order by transactionMonth, transactionDay, abs(amount)"),
 	@NamedQuery(name = "findTransactionsByUserAndDescriptionAndVendor", query = "select txn from Transaction txn where user = ?1 and description = ?2 and vendor = ?3"),
 	@NamedQuery(name = "findUniqueDescriptionVendorCombinations", query = "select distinct txn.description, txn.vendor from Transaction txn where user = ?1"),
 	@NamedQuery(name = "findExistingTransaction", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 and transactionDay = ?4 and amount = ?5 and description = ?6 and vendor = ?7")
