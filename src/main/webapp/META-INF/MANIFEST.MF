@@ -1,2 +1,26 @@
 Manifest-Version: 1.0
+Class-Path: commons-lang3-3.1.jar cglib-nodep-2.2.2.jar slf4j-api-1.6.
+ 6.jar logback-classic-1.0.6.jar logback-core-1.0.6.jar javax.servlet-
+ api-3.0.1.jar javax.persistence-2.0.0.jar hibernate-core-4.1.6.Final.
+ jar antlr-2.7.7.jar jboss-logging-3.1.0.GA.jar jboss-transaction-api_
+ 1.1_spec-1.0.0.Final.jar dom4j-1.6.1.jar hibernate-jpa-2.0-api-1.0.1.
+ Final.jar javassist-3.15.0-GA.jar hibernate-commons-annotations-4.0.1
+ .Final.jar hibernate-entitymanager-4.1.6.Final.jar spring-core-3.1.2.
+ RELEASE.jar spring-asm-3.1.2.RELEASE.jar commons-logging-1.1.1.jar sp
+ ring-web-3.1.2.RELEASE.jar aopalliance-1.0.jar spring-beans-3.1.2.REL
+ EASE.jar spring-context-3.1.2.RELEASE.jar spring-aop-3.0.7.RELEASE.ja
+ r spring-expression-3.1.2.RELEASE.jar spring-webmvc-3.1.2.RELEASE.jar
+  spring-context-support-3.1.2.RELEASE.jar spring-orm-3.1.2.RELEASE.ja
+ r spring-jdbc-3.1.2.RELEASE.jar spring-tx-3.1.2.RELEASE.jar spring-se
+ curity-core-3.1.2.RELEASE.jar spring-security-config-3.1.2.RELEASE.ja
+ r spring-security-web-3.1.2.RELEASE.jar spring-oxm-3.1.2.RELEASE.jar 
+ commons-lang-2.5.jar mail-1.4.5.jar activation-1.1.jar jasypt-1.9.0.j
+ ar jasypt-springsecurity3-1.9.0.jar mysql-connector-java-5.0.5.jar ve
+ locity-tools-2.0.jar commons-beanutils-1.7.0.jar commons-digester-1.8
+ .jar commons-chain-1.1.jar commons-collections-3.2.jar commons-valida
+ tor-1.3.1.jar oro-2.0.8.jar sslext-1.2-0.jar struts-core-1.3.8.jar st
+ ruts-taglib-1.3.8.jar struts-tiles-1.3.8.jar velocity-1.6.2.jar openc
+ sv-2.3.jar velocity-1.7.jar commons-collections-3.2.1.jar commons-lan
+ g-2.4.jar commons-logging-1.0.3.jar joda-time-2.2.jar commons-fileupl
+ oad-1.3.jar commons-io-2.2.jar
 

@@ -1,30 +1,39 @@
 package com.zerodes.bta.dto;
 
+import com.zerodes.bta.enums.CategoryTypeEnum;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.joda.time.DateTime;
 
 public class SummaryCategoryDto {
-	private String category;
+	private CategoryDto category;
 	private Double monthAmount = 0d;
 	private Double yearAmount = 0d;
-	
-	public String getCategory() {
-		return category;
-	}
-	public void setCategory(String category) {
+
+	public SummaryCategoryDto(CategoryDto category) {
 		this.category = category;
 	}
+
+	public String getCategoryName() {
+		return category.getName();
+	}
+	
 	public Double getAmount(SummaryType type) {
 		if (type == SummaryType.MONTH) {
-			return monthAmount;
+			if (category.getType() == CategoryTypeEnum.FIXED_ANNUAL) {
+				return yearAmount / 12;
+			} else {
+				return monthAmount;
+			}
 		} else if (type == SummaryType.YEAR) {
 			return yearAmount;
 		} else if (type == SummaryType.YEAR_AVERAGE) {
-			return yearAmount / DateTime.now().getMonthOfYear();
+			return yearAmount / 12;
 		}
 		return null;
 	}
+
 	public void addToAmount(Double amount, boolean inMonth) {
 		if (inMonth) {
 			this.monthAmount = this.monthAmount + amount;

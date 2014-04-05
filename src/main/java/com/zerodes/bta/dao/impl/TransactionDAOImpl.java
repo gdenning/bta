@@ -52,8 +52,8 @@ class TransactionDAOImpl extends AbstractJpaDao<Transaction> implements Transact
 	}
 
 	@Override
-	public List<Transaction> findTransactionsByUserAndYear(User user, int year) {
-		Query query = createNamedQuery("findTransactionsByUserAndYear", user, year);
+	public List<Transaction> findTransactionsByUserAndYearMonthList(User user, List<String> yearMonthList) {
+		Query query = createNamedQuery("findTransactionsByUserAndYearMonthList", user, yearMonthList);
 		return query.getResultList();
 	}
 

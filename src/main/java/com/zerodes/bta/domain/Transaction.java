@@ -19,7 +19,7 @@ import org.hibernate.annotations.ForeignKey;
 @Entity
 @Table(name = "TTransaction")
 @NamedQueries({
-	@NamedQuery(name = "findTransactionsByUserAndYear", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 order by transactionMonth, transactionDay, abs(amount)"),
+	@NamedQuery(name = "findTransactionsByUserAndYearMonthList", query = "select txn from Transaction txn where user = ?1 and CONCAT(CONCAT(transactionYear, '-'), transactionMonth) in ?2 order by transactionYear, transactionMonth, transactionDay, abs(amount)"),
 	@NamedQuery(name = "findTransactionsByUserAndMonth", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 order by transactionDay, abs(amount)"),
 	@NamedQuery(name = "findTransactionsByUserAndMonthAndCategory", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 and txn.derivedCategory.name = ?4 order by transactionMonth, transactionDay, abs(amount)"),
 	@NamedQuery(name = "findTransactionsByUserAndMonthAndUnassignedCategory", query = "select txn from Transaction txn where user = ?1 and transactionYear = ?2 and transactionMonth = ?3 and txn.derivedCategory = null order by transactionMonth, transactionDay, abs(amount)"),

@@ -33,8 +33,8 @@
 		<th rowspan="$summary.getRevenue().size()">Revenue</td>
 #set( $first = false)
 #end
-		<td>$revenue.getCategory()</td>
-		<td><a href="transactions?period=$selectedPeriod&category=$revenue.getCategory()">$velocityFormatter.formatCurrency($revenue.getAmount($monthEnum))</a></td>
+		<td>$revenue.getCategoryName()</td>
+		<td><a href="transactions?period=$selectedPeriod&category=$revenue.getCategoryName()">$velocityFormatter.formatCurrency($revenue.getAmount($monthEnum))</a></td>
 		<td>$velocityFormatter.formatCurrency($revenue.getAmount($yearAverageEnum))</td>
 	</tr>
 #end
@@ -50,8 +50,8 @@
 		<th rowspan="$summary.getExpenses().size()">Expenses</td>
 #set( $first = false)
 #end
-		<td>$expense.getCategory()</td>
-		<td><a href="transactions?period=$selectedPeriod&category=$expense.getCategory()">$velocityFormatter.formatCurrency($expense.getAmount($monthEnum))</a></td>
+		<td>$expense.getCategoryName()</td>
+		<td><a href="transactions?period=$selectedPeriod&category=$expense.getCategoryName()">$velocityFormatter.formatCurrency($expense.getAmount($monthEnum))</a></td>
 		<td>$velocityFormatter.formatCurrency($expense.getAmount($yearAverageEnum))</td>
 	</tr>
 #end

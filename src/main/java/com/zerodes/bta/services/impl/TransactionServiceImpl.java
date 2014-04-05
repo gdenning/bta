@@ -74,8 +74,8 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public List<TransactionDto> findTransactions(User user, int year) {
-		return convertTransactionsToTransactionDtos(transactionDAO.findTransactionsByUserAndYear(user, year));
+	public List<TransactionDto> findTransactions(User user, List<String> yearMonthList) {
+		return convertTransactionsToTransactionDtos(transactionDAO.findTransactionsByUserAndYearMonthList(user, yearMonthList));
 	}
 
 	@Override

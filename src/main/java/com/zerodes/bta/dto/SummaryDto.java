@@ -67,7 +67,7 @@ public class SummaryDto {
 		public int compare(SummaryCategoryDto o1, SummaryCategoryDto o2) {
 			return new CompareToBuilder()
 				.append(o1.getAmount(SummaryType.MONTH), o2.getAmount(SummaryType.MONTH))
-				.append(o1.getCategory(), o2.getCategory())
+				.append(o1.getCategoryName(), o2.getCategoryName())
 				.toComparison();
 		}
 	}
