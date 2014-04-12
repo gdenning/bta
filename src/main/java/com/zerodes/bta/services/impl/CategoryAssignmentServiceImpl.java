@@ -16,7 +16,6 @@ import com.zerodes.bta.domain.CategoryAssignment;
 import com.zerodes.bta.domain.Transaction;
 import com.zerodes.bta.domain.User;
 import com.zerodes.bta.dto.CategoryAssignmentDto;
-import com.zerodes.bta.dto.CategoryDto;
 import com.zerodes.bta.services.CategoryAssignmentService;
 import com.zerodes.bta.services.CategoryService;
 
@@ -77,9 +76,9 @@ public class CategoryAssignmentServiceImpl implements CategoryAssignmentService 
 	}
 
 	@Override
-	public CategoryDto findCategoryForVendorAndDescription(User user, String vendor, String description) {
+	public Category findCategoryForVendorAndDescription(User user, String vendor, String description) {
 		CategoryAssignment categoryAssignment = categoryAssignmentDao.findByVendorAndDescription(user, vendor, description);
-		return categoryService.convertCategoryToCategoryDto(categoryAssignment.getCategory());
+		return categoryAssignment.getCategory();
 	}
 	
 	@Override
@@ -104,17 +103,15 @@ public class CategoryAssignmentServiceImpl implements CategoryAssignmentService 
 	
 	@Override
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-	public void save(final User user, final Map<String, String[]> parameterMap) {
+	public void save(final User user, final Map<Integer, String> categoryAssignmentHashCodeToCategoryName) {
 		List<CategoryAssignmentDto> categoryAssignments = findCategoryAssignments(user);
-		for (String categoryAssignmentLabel : parameterMap.keySet()) {
-			String categoryName = parameterMap.get(categoryAssignmentLabel)[0];
-			if (!categoryName.isEmpty()) {
-				int categoryAssignmentDtoHashCode = Integer.parseInt(categoryAssignmentLabel.substring(11));
-				for (CategoryAssignmentDto categoryAssignmentDto : categoryAssignments) {
-					if (categoryAssignmentDto.hashCode() == categoryAssignmentDtoHashCode) {
-						Category category = categoryDao.findCategoryByName(user, categoryName);
-						save(user, categoryAssignmentDto.getDescription(), categoryAssignmentDto.getVendor(), category);
-					}
+		for (Map.Entry<Integer, String> categoryAssignmentHashCodeAndCategoryName : categoryAssignmentHashCodeToCategoryName.entrySet()) {
+			String categoryName = categoryAssignmentHashCodeAndCategoryName.getValue();
+			int categoryAssignmentDtoHashCode = categoryAssignmentHashCodeAndCategoryName.getKey();
+			for (CategoryAssignmentDto categoryAssignmentDto : categoryAssignments) {
+				if (categoryAssignmentDto.hashCode() == categoryAssignmentDtoHashCode) {
+					Category category = categoryDao.findCategoryByName(user, categoryName);
+					save(user, categoryAssignmentDto.getDescription(), categoryAssignmentDto.getVendor(), category);
 				}
 			}
 		}

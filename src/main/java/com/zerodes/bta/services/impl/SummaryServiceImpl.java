@@ -28,7 +28,7 @@ public class SummaryServiceImpl implements SummaryService {
 		return summarize(transactionService.findTransactions(user, yearMonthListForPastYear), month);
 	}
 
-	private List<String> generateYearMonthListForPastYear(int year, int month) {
+	protected List<String> generateYearMonthListForPastYear(int year, int month) {
 		int currentYear = year;
 		int currentMonth = month;
 		List<String> yearMonthList = new ArrayList<String>();

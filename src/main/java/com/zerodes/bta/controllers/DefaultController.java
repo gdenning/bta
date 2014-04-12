@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.zerodes.bta.domain.Category;
+import com.zerodes.bta.dto.CategoryAssignmentDto;
 import com.zerodes.bta.dto.CategoryDto;
 import com.zerodes.bta.dto.SummaryDto;
 import com.zerodes.bta.dto.SummaryType;
@@ -34,6 +36,7 @@ import com.zerodes.bta.services.CategoryAssignmentService;
 import com.zerodes.bta.services.CategoryService;
 import com.zerodes.bta.services.SummaryService;
 import com.zerodes.bta.services.TransactionService;
+import com.zerodes.bta.services.impl.LoadTransactionStats;
 
 @Scope("singleton")
 @Controller
@@ -98,14 +101,16 @@ public class DefaultController extends AbstractController {
 	 */
 	@RequestMapping(value = "/transactionsUpload", method = { RequestMethod.POST })
 	public String handleTransactionsUploadRequest(final HttpServletRequest request) {
+		LoadTransactionStats stats = null;
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 		if (isMultipart) {
 			ServletFileUpload upload = new ServletFileUpload();
 			try {
 				FileItemIterator iter = upload.getItemIterator(request);
-				while (iter.hasNext()) {
+				if (iter.hasNext()) {
 					FileItemStream item = iter.next();
-					transactionService.createTransactionsFromCSVStream(getAuthenticatedUser(), item.getName(), item.openStream());
+					stats = transactionService.createTransactionsFromCSVStream(getAuthenticatedUser(),
+							item.getName(), item.openStream());
 				}
 			} catch (FileUploadException e) {
 				// TODO: Catch exception
@@ -115,7 +120,10 @@ public class DefaultController extends AbstractController {
 				e.printStackTrace();
 			}
 		}
-		return "redirect:transactions";
+		if (stats == null) {
+			return "redirect:transactions";
+		}
+		return "redirect:transactions?newTxns=" + stats.getNewTransactions() + "&skippedTxns=" + stats.getSkippedTransactions();
 	}
 
 	/**
@@ -155,7 +163,16 @@ public class DefaultController extends AbstractController {
 	 */
 	@RequestMapping(value = "/saveCategoryAssociations", method = { RequestMethod.POST })
 	public String handleSaveCategoryAssociationsRequest(final HttpServletRequest request) {
-		categoryAssignmentService.save(getAuthenticatedUser(), request.getParameterMap());
+		Map<Integer, String> categoryAssignmentHashCodeToCategoryName = new HashMap<Integer, String>();
+		Map<String, String[]> parameterMap = request.getParameterMap();
+		for (String categoryAssignmentLabel : parameterMap.keySet()) {
+			String categoryName = parameterMap.get(categoryAssignmentLabel)[0];
+			if (!categoryName.isEmpty()) {
+				int categoryAssignmentDtoHashCode = Integer.parseInt(categoryAssignmentLabel.substring(11));
+				categoryAssignmentHashCodeToCategoryName.put(categoryAssignmentDtoHashCode, categoryName);
+			}
+		}
+		categoryAssignmentService.save(getAuthenticatedUser(), categoryAssignmentHashCodeToCategoryName);
 		return "redirect:categoryAssociations";
 	}
 

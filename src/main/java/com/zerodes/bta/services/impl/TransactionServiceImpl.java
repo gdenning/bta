@@ -12,9 +12,12 @@ import au.com.bytecode.opencsv.CSVReader;
 import com.zerodes.bta.csvstrategy.CSVStrategy;
 import com.zerodes.bta.dao.CategoryAssignmentDAO;
 import com.zerodes.bta.dao.TransactionDAO;
+import com.zerodes.bta.domain.Category;
 import com.zerodes.bta.domain.Transaction;
 import com.zerodes.bta.domain.User;
+import com.zerodes.bta.dto.CategoryDto;
 import com.zerodes.bta.dto.TransactionDto;
+import com.zerodes.bta.services.CategoryAssignmentService;
 import com.zerodes.bta.services.CategoryService;
 import com.zerodes.bta.services.TransactionService;
 
@@ -31,7 +34,7 @@ public class TransactionServiceImpl implements TransactionService {
 	private TransactionDAO transactionDAO;
 	
 	@Autowired
-	private CategoryAssignmentDAO categoryAssignmentDAO;
+	private CategoryAssignmentService categoryAssignmentService;
 	
 	@Autowired
 	private CategoryService categoryService;
@@ -41,8 +44,9 @@ public class TransactionServiceImpl implements TransactionService {
 	
 	@Override
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-	public void createTransactionsFromCSVStream(final User user, final String filename, final InputStream stream)
+	public LoadTransactionStats createTransactionsFromCSVStream(final User user, final String filename, final InputStream stream)
 			throws IOException {
+		LoadTransactionStats stats = new LoadTransactionStats();
 		CSVReader reader = new CSVReader(new InputStreamReader(stream));
 		// nextLine[] is an array of values from the line
 		String[] nextLine = reader.readNext();
@@ -56,11 +60,19 @@ public class TransactionServiceImpl implements TransactionService {
 				if (transactionDAO.findExistingTransaction(user,
 						transaction.getTransactionYear(), transaction.getTransactionMonth(), transaction.getTransactionDay(),
 						transaction.getAmount(), transaction.getDescription(), transaction.getVendor()) == null) {
+					// Determine derived category
+					Category category = categoryAssignmentService.findCategoryForVendorAndDescription(user,
+							transaction.getDescription(), transaction.getVendor());
+					transaction.setDerivedCategory(category);
 					transactionDAO.store(transaction);
+					stats.incrementNewTransactions();
+				} else {
+					stats.incrementSkippedTransactions();
 				}
 			}
 			nextLine = reader.readNext();
 		}
+		return stats;
 	}
 
 	private CSVStrategy identifyCSVStrategy(String[] firstLine) {
