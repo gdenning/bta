@@ -78,6 +78,9 @@ public class CategoryAssignmentServiceImpl implements CategoryAssignmentService 
 	@Override
 	public Category findCategoryForVendorAndDescription(User user, String vendor, String description) {
 		CategoryAssignment categoryAssignment = categoryAssignmentDao.findByVendorAndDescription(user, vendor, description);
+		if (categoryAssignment == null) {
+			return null;
+		}
 		return categoryAssignment.getCategory();
 	}
 	
